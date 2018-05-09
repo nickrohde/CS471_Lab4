@@ -1,0 +1,450 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment
+% LaTeX Template
+% Version 1.0 (5/5/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+\usepackage{pdflscape}
+
+
+\usepackage{graphicx} % figures
+\usepackage{subcaption} % captions for figures
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage[margin=0.25in]{geometry}
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{rotating} % for long tables
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+\usepackage{tabularx,ragged2e,booktabs,caption} % tabular tables
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{Central Washington University, Department of Computer Science} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge CS471 Project 3 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Nick Rohde} % Your name
+
+\date{\normalsize 8$^{th}$ May, 2018} % Today's date or a custom date
+
+\usepackage{hyperref}
+\hypersetup
+{
+	colorlinks=true,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=blue,
+	linktoc=all,
+	linkcolor=blue,
+}
+
+
+\begin{document}
+
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}\label{S1}
+	For this project, we implemented a Genetic Algorithm (GA) and Differential Evolution (DE) (with the ten most common strategies). Both GA and DE are evolutionary algorithms that attempt to mimic the process of natural selection to find the global optimum of a given fitness function. In this case, we continued to use the fifteen cost functions from Project 1 as fitness functions. \\
+	
+	\subsection{Genetic Algorithm Overview}\label{S11}
+		The implementation of GA consists of three main components, (1) selection, (2) crossing-over, and (3) mutation. On top of this, elitism was used to ensure that the best solution would not be eliminated due to a random decision; a certain number of individuals automatically moved to the next generation, the exact number was determined by the elitism rate, one of the tuning parameters as can be seen in the \hyperref[T21]{table of parameters}.\\
+		\\In this implementation selection (1) maps the current fitness of an individual, where the fitness $f \in {\rm I\!R}$, into ${\rm I\!R^+}$; this was done using the formula:\\
+		\begin{equation}\label{E_MAP}
+		f'_i = f_{max} - f_{i}\quad \exists! max, ~\forall i \in \{1,2,...,P\}
+		\end{equation}
+		This linear mapping preserves relative proportions among members of the population, and guarantees that all mapped fitness values $f'_i \in {\rm I\!R^+}$. With these mapped fitness values, probabilities for each member of the population were generated according to the Roulette selection rule:
+		\begin{equation}\label{E_PROB}
+		P_{i} = \frac{f'_{i}}{\sum_{j=1}^{P}f'_{j}}\quad \forall i \in \{1,2,...,P\}
+		\end{equation}
+		Crossing-over (2) was done using a random binary string; each digit represented either a section taken from Parent A, or Parent B, and then a random list of indices was generated which were used as cutting points. The decision on whether crossing-over occurs or not was done randomly for each selected pair of parents, if crossing-over did not occur the parents moved on to the next generation. The chance of crossing-over occurring and the number of cutting points were used as a tuning parameters, which can be found in the \hyperref[T21]{table of parameters}.\\
+		\\ Lastly, mutation (3) was done randomly on each gene, similar to crossing-over, each time a random decision was made on whether it occurs or not.\\
+	
+	\subsection{Differential Evolution Overview}\label{S12}
+		Differential evolution consists of the same three components as GA, (1) selection, (2) crossing-over, and (3) mutation, however, the order of these was changed here and more random decisions were made than before.\\
+		\\Unlike in GA, selection (1) was done completely randomly, the fitness of an individual did not effect it's chance of reproducing. This was done by generating a random permutation of M indices, which were the individuals selected for reproduction - unlike GA, the number of parents was variable between 3 and 5. \\
+		\\The next step of differential evolution involved mutating the new gene (3) according to one of the ten DE strategies. This produced the new gene, which then moved on to crossing-over (2).\\
+		\\Crossing-over was done using one of two strategies namely, exponential (EXP) and binomial (BIN). The EXP strategy works much the same as it did in GA; however, this time only a single cutting point existed. BIN, on the other hand, did crossing-over on a gene-by-gene level, where the decision on whether crossing-over occurs or not was made independently for each gene.\\
+		\\Finally, the offspring that was produced was compared to it's main parent and the fitter of the two moved on to the next generation and the other was eliminated. 
+	
+			
+\section{Experimentation}\label{S2}
+	The experimentation for both GA and DE were done using the parameters that can be found in the \hyperref[T21]{table of parameters}. For the most part, only small changes were made to the parameters (as discussed in \hyperref[S21]{Section 2.1}) and the original values or value ranges were used.
+	
+	\begin{minipage}{\linewidth}
+		\centering
+		\captionof{table}{Table of Parameters}
+		\begin{tabular}{cc|cc}\label{T21}
+			Parameter       			&				& GA 		& DE   		\\
+			\hline
+			Dimensions					& (D)			& 10/20/30	& 10/20/30	\\
+			Generations					& (Gen)			& 100		& 100  		\\
+			Population Size				& (P)			& 10D		& 10D  		\\
+			Elitism Rate				& (ER)			& 20\%		& *    		\\
+			Crossing-over Rate			& (CR)			& 80\%		& 75\%		\\
+			Crossing-over Points		& (CP)			& 4			& **		\\
+			Mutation Rate				& (MR)			& 15\%		& 20\%		\\
+			Mutation Range				& (MRg)			& 25		& *			\\
+			Mutation Precision			& (MP)			& 89\%		& *			\\
+			Scaling Factor 				& (F)			& *			& **		\\
+			Scaling Factor 				& ($\lambda$)	& *			& **		\\
+		\end{tabular}
+		\bigskip\\
+		\small{* denotes the parameter was not used by that algorithm \\ ** denotes the parameter was replaced by a random decision}
+	\end{minipage}
+	
+	\subsection{Changes to Parameters}\label{S21}
+	 The parameters that were changed are: \hyperref[T21]{P}, \hyperref[T21]{CP}, \hyperref[T21]{F}, and \hyperref[T21]{$\lambda$}. We will briefly discuss the rational behind the changes that were made, as well as how they were made.\\
+	 \\Firstly, Population size does not significantly impact the runtime (in small increments), thus increasing the population size to see how changes effect the solutions was worth the extra time investment. Several papers suggested that the population should be 10 times the number of dimensions (D), thus the population sizes were set to 100, 200, and 300 for 10, 20, and 30 dimensions, respectively. Though this impacted the runtime moderately (roughly 2 minutes longer per test run), it did not have a significant effect on overall execution time of a single call to DE. The change yielded better solutions than with a fixed population size of 100 for the higher dimensions, about 10\% improvement on average, but had no effect on 10 dimensions.\\
+	 \\The number of crossing-over points for GA was increased from one to four. This was done to see how the number of slices made effects the final results. GA was run with 1-10 crossing-over points and it was determined that 4, in general, is the best value for this parameter. With CP $\ge$ 7, the search became very random, and with CP = 1, there was not enough variety in the population to find the optimal solutions. CP = 4 provides a nice middle ground where there is not too much randomness, but enough to ensure that the larger populations are still diverse enough to find good solutions. \\
+	 \\The scaling factors of DE were replaced with random decisions; for each noise vector that was produced, F was randomly generated in the range [0,1] and $\lambda$ was set to $\frac{F}{2}$ for DE/rand-to-best/1/*. This was done because several papers suggest that this method (dither) is a more effective way of finding good solutions. Experimentally, this method resulted in slightly better solutions, a 6\% improvement on average, though this could be due to the inherent randomness of the algorithm.\\
+	 	 
+	
+\section{Analysis} \label{S3}
+	Now, we will discuss the data displayed in \hyperref[S4]{Section 4}. In the discussion below we will reference some of the parameters from the \hyperref[T21]{table of parameters} by the acronyms provided in column 2. Test settings can be found in \hyperref[T41]{Table 4.1} \\
+	
+	\subsection{Execution Time}
+		First of all, we will compare and contrast the execution times of our 5 methods; for the purposes of this, we will consider DE1, DE2, and D3 to be a single strategy we will refer to as DE as their execution times are very close together. It is immediately obvious from figures \hyperref[F_10]{4.1}, \hyperref[F_20_ILS]{4.3}, and \hyperref[F_30_ILS]{4.5} that ILS is much worse in terms of execution time than DE or GA. At first, ILS was able to keep up with GA and DE in 10 dimensions, however, we can see that ILS does not scale well with the dimensions like DE and GA do. In 10 dimensions, ILS found solutions to Griewangk's function in, on average, 0.78 seconds; in 30 dimensions this number skyrocketed to about 34 seconds per solution; that is over 1 second per iteration of local search. On the other hand, DE and GA scaled extremely well with dimensions, with GA scaling slightly better overall. Interestingly, GA also behaved extremely well for all functions; DE had quite some variation in execution time per function, but GA did not display this behaviour. We can see in figures \hyperref[F_10]{4.1}, \hyperref[F_20]{4.2}, and \hyperref[F_30]{4.3} that GA has almost a constant execution time, regardless of function. Whereas DE jumps around and has more difficulty with the last 5 functions than with the first 10. Interestingly, DE and GA have no issues with the functions that presented a problem for ILS; the execution times for Griewangk's function and the Egg Holder function are not that much different from the execution times of the others; for Griewangk's function, neither GA nor DE have an increase in execution time, and for the Egg Holder function, only DE is slightly effected by it.\\ 
+		\\ Overall, GA has the best execution time of all 5 methods we have tested here; DE3 comes in second, but is considerably longer than GA.\\
+	
+	\subsection{Quality of Solutions}
+		Next, we will look at what the quality of solutions from the 5 different methods is.\\ Firstly, we will compare the three strategies of DE together, for this we will look at tables \hyperref[DE_10]{4.2}, \hyperref[DE_20]{4.3}, and \hyperref[DE_30]{4.4}. The first thing we can notice here is that DE2 is always worse than DE1 and DE3; regardless of category, the other two always beat it. However, DE1 and DE2 are very closely matched. In 10 dimensions, DE3 has a clear lead on the quality of solutions, achieving lower results than DE1 10/15 times and most of these are by quite a bit. The averages too, show that DE3 performed better, as DE3 has a smaller range, lower average solution, lower median, and smaller standard deviation. This lead by DE3 is only in 10 dimensions though, in 20 and 30 dimensions DE1 performs better than DE3 and the margin grows quite large. Due to the fact that DE1 performs better with Rosenbrock's function, the average solution that DE1 found is much lower than those of DE2, and DE3. Interestingly, in many cases DE3 still performs better than DE1, however, now DE1 performs better in most cases. The same thing can be seen in 30 dimensions. Here, DE1 and DE3 are almost tied on their performance for solutions, each getting the lowest solution for about half the functions. Once again, though, DE2 and DE3 cannot keep up with DE1's ability to minimize Rosenbrock's function. From this, we can conclude that Rosenbrock's function is best minimized using a exponential differential evolution technique. Similarly, we can conclude that the strategy to use largely depends on the function being minimized. DE3 consistently beat DE1 and DE2 for functions f1, f10, and f11; this suggests that DE3 is a better strategy for these types of problems.\\
+		Next, let us compare the best DE strategy, DE1, to the other two strategies, namely, GA and ILS. Similar to execution times, ILS did not provide solutions that were nearly as good as GA or DE. GA and DE, on the other hand, were closely matched, both provided good solutions, but DE usually provided the best solutions. Interestingly, in the functions where DE3 beat DE1, GA beat DE1 as well; this suggests that GA and binomial differential evolution techniques perform well in the same types of problems.
+		
+	\subsection{Conclusions}
+		Overall, we can conclude that all forms of DE and GA are better than ILS; the run time, and the quality of the solutions provided by these are far superior to what ILS provides. From sections 3.1 and 3.2, we can conclude that GA is the best algorithm for time, whereas DE is the best algorithm for solutions - though which exact DE method depends on the function being optimized. Furthermore, we also determined that GA performs just as well as DE sometimes, though it depends on which DE method it is compared to. Lastly, we can also conclude that there are function, such as f1, f10, and f11, where binomial differential evolution is better fit for the challenge; similarly, exponential differential evolution is sometimes more fit for other functions. On top of that, we've also identified that GA and binomial differential evolution are very similar in the types of problems where they excel and provide the best solutions.
+	 
+
+	
+\section{Data} \label{S4}
+	All data displayed in this section was generated on a windows machine with a 3.2GHz AMD Ryzen 7 1700X processor, and 16 GB RAM. \hyperref[T41]{Table 4.1} below shows the settings that were used for the tests; for GA and DE, all settings from \hyperref[T21]{table 2.1} were used to configure the algorithms. The data was written to files after all tests for a function were completed.\\ 
+
+	\begin{minipage}{\linewidth}
+		\centering
+		\captionof{table}{Test Settings}
+		\begin{tabular}{c|ccc}\label{T41}
+			Parameter       			& ILS			& GA 		& DE   		\\
+			\hline
+			\# of Tests per Function		& 100			& 100		& 100		\\
+			Iterations/Generations		& 30			& 100		& 100		\\
+			\# of Threads				& 16			& 16		& 16		\\
+		\end{tabular}
+		\bigskip\\
+	\end{minipage}
+
+
+\begin{figure}[!ht]
+	\includegraphics[width=\linewidth]{times_10D.png}
+	\caption{Execution time of different Strategies in 10 dimensions.}
+	\label{F_10}
+\end{figure}
+\begin{figure}[!ht]
+	\includegraphics[width=\linewidth]{times_20D.png}
+	\caption{Execution time of different Strategies in 20 dimensions.}
+	\label{F_20}
+\end{figure}
+\begin{figure}[!ht]
+	\includegraphics[width=\linewidth]{times_20D_ILS.png}
+	\caption{Execution time of different Strategies in 20 dimensions with ILS.}
+	\label{F_20_ILS}
+\end{figure}
+\begin{figure}[!ht]
+	\includegraphics[width=\linewidth]{times_30D.png}
+	\caption{Execution time of different Strategies in 30 dimensions.}
+	\label{F_30}
+\end{figure}
+\begin{figure}[!ht]
+	\includegraphics[width=\linewidth]{times_30D_ILS.png}
+	\caption{Execution time of different Strategies in 30 dimensions with ILS.}
+	\label{F_30_ILS}
+\end{figure}
+
+
+
+%----------------------------------------------------------------------------------------
+% DE
+
+\begin{landscape}
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for DE/best/1/exp, DE/rand/1/bin, and DE/best/2/bin in 10 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Problem & \multicolumn{5}{c}{Differential Evolution (best/1/exp)}& \multicolumn{5}{|c|}{Differential Evolution (rand/1/bin)} &  \multicolumn{5}{c}{Differential Evolution (best/2/bin)} \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			& Avg & Median & Range & SD & T(s) & Avg & Median
+			& Range & SD & T(s) & Avg & Median & Range & SD &
+			T(s) \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			$f_{1}$  & -3832.41 & -3890.96 & 1059.51 & 240.894 & 0.10871 & -2715.56 & -2697.73 & 898.37  & 169.900 & 0.21209 & -4167.05 & -4180.34 & 148.12  & 33.7926 & 0.113956\\
+			$f_{2}$  &  0.00475 &  0.00415 & 0.01435 & 0.00281 & 0.08292 &  21.0492 &  20.8388 & 34.5181 & 6.42347 & 0.14796 &  0.14650 &  0.14146 & 0.29694 & 0.05449 & 0.094721\\
+			$f_{3}$  &  73.1204 &  28.3278 & 1028.60 & 126.416 & 0.09707 & 33708.75 &  31117.7 & 81613.9 & 16743.7 & 0.14255 &  339.011 &  317.22  & 709.492 & 147.341 & 0.107109\\
+			$f_{4}$  & -1970.10 & -1969.97 & 21.68   & 4.86361 & 0.13077 & -1945.00 & -1943.56 & 36.6    & 7.10246 & 0.16074 & -1982.29 & -1981.78 & 17.47   & 3.47772 & 0.115875\\
+			$f_{5}$  &  0.68853 &  0.68734 & 0.64512 & 0.11295 & 0.12736 &  1.11581 &  1.12763 & 0.33944 & 0.05951 & 0.14824 &  0.59529 &  0.59760 & 0.58339 & 0.11363 & 0.112011\\
+			$f_{6}$  & -11.9926 & -11.9884 & 1.2744  & 0.21064 & 0.17124 & -11.3209 & -11.2892 & 1.1819  & 0.25508 & 0.21561 & -12.4432 & -12.4537 & 0.866   & 0.16902 & 0.155125\\
+			$f_{7}$  &  3.14954 &  3.08748 & 2.892   & 0.58377 & 0.10150 &  13.2742 &  13.2951 & 5.4497  & 1.12927 & 0.16134 &  5.62081 &  5.50161 & 4.14073 & 0.72092 & 0.123205\\
+			$f_{8}$  & -20.7944 & -21.1628 & 11.4993 & 2.58177 & 0.11278 & -6.94912 & -6.65458 & 12.8432 & 2.67400 & 0.17065 & -25.4409 & -25.675  & 6.3678  & 1.19756 & 0.111189\\
+			$f_{9}$  &  0.33048 &  0.30682 & 0.58891 & 0.11243 & 0.09062 &  24.9188 &  24.9587 & 17.8478 & 2.95813 & 0.14645 &  1.63435 &  1.58012 & 3.13725 & 0.45941 & 0.103968\\
+			$f_{10}$ & -4211.73 & -4212.55 & 1995.98 & 350.215 & 0.20236 & -3445.44 & -3436.60 & 1159.22 & 252.984 & 0.24899 & -4810.80 & -4755.74 & 2517.24 & 404.537 & 0.189934\\
+			$f_{11}$ & -2442.54 & -2436.43 & 860.21  & 182.351 & 0.20240 & -2097.52 & -2069.63 & 762.49  & 155.235 & 0.24083 & -2807.31 & -2791.25 & 718.9   & 136.212 & 0.188334\\
+			$f_{12}$ &  2.67576 &  2.68145 & 0.76149 & 0.16632 & 0.19861 &  3.02864 &  3.04777 & 0.68543 & 0.13450 & 0.24035 &  2.35345 &  2.34765 & 1.18107 & 0.18944 & 0.190946\\
+			$f_{13}$ & -7.65443 & -7.65045 & 1.91915 & 0.40761 & 0.13025 & -6.18651 & -6.11172 & 1.94889 & 0.37404 & 0.19842 & -9.13081 & -9.13665 & 0.80605 & 0.16200 & 0.123196\\
+			$f_{14}$ & -3.50882 & -3.51655 & 1.79211 & 0.40070 & 0.15582 & -2.43988 & -2.35962 & 1.67627 & 0.32086 & 0.22715 & -4.36517 & -4.36099 & 1.86216 & 0.35804 & 0.152035\\
+			$f_{15}$ & -2.82619 & -1.57213 & 9.21059 & 3.05116 & 0.07292 & -0.65339 & -0.60280 & 1.04939 & 0.23679 & 0.10017 & -1.83902 & -1.46706 & 7.15100 & 1.43115 & 0.158907\\
+			
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Mean & -828.240 & -834.714 & 333.105 & 60.8248 & 0.13236 & 1569.40 & 1400.43 & 5636.54 & 1156.23 & 0.18410 & -898.088 & -895.654 & 275.841 & 48.6810 & 0.13603 \\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE_10}
+	\end{table}
+
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for DE/best/1/exp, DE/rand/1/bin, and DE/best/2/bin in 20 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Problem & \multicolumn{5}{c}{Differential Evolution (best/1/exp)}& \multicolumn{5}{|c|}{Differential Evolution (rand/1/bin)} &  \multicolumn{5}{c}{Differential Evolution (best/2/bin)} \\  
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			& Avg & Median & Range & SD & T(s) & Avg & Median
+			& Range & SD & T(s) & Avg & Median & Range & SD &
+			T(s) \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			$f_{1}$  & -4066.83 & -4044.23 & 1403.78 & 301.023 & 0.24644 & -3617.35 & -3584.32 & 1191.75 & 228.404 & 0.29539 & -5883.76 & -5857.33 & 1480.05 & 307.863 & 0.18584\\
+			$f_{2}$  &  9.21348 &  8.15146 & 30.1959 & 5.17659 & 0.11699 &  2489.05 &  2561.22 & 2473.38 & 481.371 & 0.20758 &  64.6246 &  64.2561 & 90.3288 & 15.0384 & 0.13665\\
+			$f_{3}$  &  28851.1 &  19874.0 & 263239  & 31611.0 & 0.119   &  $1.577\times 10^{8}$ & $1.561\times 10^{8}$ & $2.253\times 10^{8}$ & $4.757\times 10^{7}$ & 0.21437 & 207872 & 191768 & 475085 & 105555 & 0.13996\\
+			$f_{4}$  & -3842.75 & -3842.15 & 87.37   & 16.4009 & 0.15939 & -3589.68 & -3586.62 & 241.55  & 43.2876 & 0.21125 & -3874.14 & -3872.77 & 61.21   & 11.6923 & 0.15557\\
+			$f_{5}$  &  1.05707 &  1.05306 & 0.34871 & 0.04283 & 0.13114 &  16.0440 &  16.2751 & 12.1712 & 2.65972 & 0.21299 &  1.40204 & 1.398615 & 0.48747 & 0.10715 & 0.14705\\
+			$f_{6}$  & -21.8977 & -21.958  & 2.9418  & 0.52714 & 0.24817 & -20.9422 & -20.9052 & 2.5532  & 0.43280 & 0.28819 & -23.3662 & -23.3069 & 1.8993  & 0.41028 & 0.22251\\
+			$f_{7}$  &  28.2205 &  28.2178 & 19.6238 & 4.28851 & 0.17024 &  58.3796 &  58.8024 & 13.487  & 2.59109 & 0.26517 &  32.2990 &  32.1682 & 9.1879  & 2.10757 & 0.19349\\
+			$f_{8}$  &  7.29205 &  7.42419 & 36.4385 & 7.76453 & 0.16940 &  57.7777 &  60.1931 & 52.6194 & 8.94190 & 0.22408 & -10.1158 & -10.2184 & 25.0699 & 4.94064 & 0.16174\\
+			$f_{9}$  &  46.0381 &  46.1045 & 36.9832 & 8.43617 & 0.13987 &  187.775 &  188.008 & 59.277  & 11.8596 & 0.22855 &  59.8976 &  59.9594 & 23.8363 & 5.02855 & 0.15523\\
+			$f_{10}$ & -5336.97 & -5291.41 & 2605.34 & 430.420 & 0.30067 & -4773.78 & -4710.91 & 2137.4  & 359.125 & 0.33346 & -6818.10 & -6763.5  & 2314.98 & 442.161 & 0.27537\\
+			$f_{11}$ & -3109.77 & -3096.47 & 1404.78 & 266.862 & 0.29929 & -2880.62 & -2873.64 & 1065.16 & 228.044 & 0.32281 & -4171.06 & -4122.74 & 1121.51 & 232.830 & 0.25771\\
+			$f_{12}$ &  7.32333 &  7.34228 & 1.06215 & 0.19573 & 0.28271 &  7.65031 &  7.67462 & 0.94792 & 0.17510 & 0.31981 &  6.58255 &  6.60865 & 1.06848 & 0.21956 & 0.26119\\
+			$f_{13}$ & -8.44269 & -8.36709 & 2.83707 & 0.58818 & 0.25933 & -8.10317 & -8.01164 & 2.77196 & 0.52946 & 0.29793 & -12.2630 & -12.2558 & 2.9923  & 0.55217 & 0.20466\\
+			$f_{14}$ & -3.09349 & -3.05453 & 1.81532 & 0.33962 & 0.26706 & -2.60515 & -2.55426 & 1.45284 & 0.31314 & 0.30519 & -4.46635 & -4.41938 & 2.08177 & 0.43103 & 0.24091\\
+			
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Mean & 897.179 & 261.760 & 19205.1 & 2176.87 & 0.20783 & 11276319 & 11137150 & 16070289 & 3398234 & 0.26620 & 13374.3 & 12233.3 & 34301.4 & 7612.80 & 0.19556\\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE_20}
+	\end{table}
+\end{landscape}
+
+\pagebreak
+
+\begin{landscape}
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for DE/best/1/exp, DE/rand/1/bin, and DE/best/2/bin in 30 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Problem & \multicolumn{5}{c}{Differential Evolution (best/1/exp)}& \multicolumn{5}{|c|}{Differential Evolution (rand/1/bin)} &  \multicolumn{5}{c}{Differential Evolution (best/2/bin)} \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			& Avg & Median & Range & SD & T(s) & Avg & Median
+			& Range & SD & T(s) & Avg & Median & Range & SD &
+			T(s) \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			$f_{1}$  & -4468.39 & -4477.94 & 2181.72 & 382.854 & 0.30287 & -4360.44 & -4342.18 & 1416.34 & 283.1685 & 0.35529 & -6811.75 & -6804.77 & 1688.72 & 345.439 & 0.24298\\
+			$f_{2}$  &  281.058 &  278.273 & 552.193 & 128.777 & 0.1369  &  10206.5 &  10289.5 & 7308.76 & 1293.246 & 0.27203 &  884.082 &  864.3   & 880.957 & 186.935 & 0.17294\\
+			$f_{3}$  &  5278506 & 3214745 & 67777447 & 7775398 & 0.13949 &  $1.355\times 10^{9}$ & $1.346\times 10^{9}$ & $1.698\times 10^{9}$ & $3.040\times 10^{8}$ & 0.29015 & $1.984\times 10^{7}$ & $1.911\times 10^{7}$ & $3.950\times 10^{7}$ & $7.465\times 10^{6}$ & 0.17189\\
+			$f_{4}$  & -5660.24 & -5665.19 & 169.52  & 36.0787 & 0.16130 & -4801.84 & -4797.63 & 726.6   & 115.6455 & 0.27564 & -5664.73 & -5667.14 & 181.28  & 29.6272 & 0.18207\\
+			$f_{5}$  &  2.73123 &  2.52172 & 4.62583 & 0.88190 & 0.15358 &  63.3084 &  64.1764 & 48.7437 & 8.079392 & 0.27877 &  6.31110 &  6.45198 & 5.18068 & 1.00275 & 0.18344\\
+			$f_{6}$  & -30.9149 & -30.8490 & 3.0272  & 0.53735 & 0.29405 & -30.0044 & -29.9896 & 3.1946  & 0.527144 & 0.34597 & -32.9520 & -32.8906 & 2.4802  & 0.52164 & 0.26174\\
+			$f_{7}$  &  72.5874 &  71.6857 & 41.1703 & 7.50465 & 0.22429 &  109.175 &  109.695 & 15.963  & 3.608935 & 0.34725 &  72.5462 &  72.7748 & 16.2164 & 3.69296 & 0.25215\\
+			$f_{8}$  &  63.7954 &  63.3944 & 80.6115 & 16.5474 & 0.19191 &  159.145 &  160.568 & 61.311  & 12.33401 & 0.28858 &  34.3381 &  34.9186 & 43.5172 & 8.95944 & 0.19459\\
+			$f_{9}$  &  160.564 &  158.519 & 138.235 & 25.2686 & 0.17031 &  377.089 &  379.56  & 67.279  & 13.06088 & 0.30941 &  183.615 &  182.04  & 55.407  & 12.3642 & 0.19937\\
+			$f_{10}$ & -6172.62 & -6075.52 & 2683.87 & 503.846 & 0.35769 & -5771.32 & -5735.81 & 2353.91 & 505.3732 & 0.40272 & -8197.56 & -8126.18 & 2696.23 & 503.753 & 0.32589\\
+			$f_{11}$ & -3484.30 & -3438.85 & 1564.1  & 300.273 & 0.34563 & -3437.27 & -3388.84 & 1536.61 & 305.3832 & 0.38338 & -5000.14 & -4966.02 & 1325.6  & 301.429 & 0.30766\\
+			$f_{12}$ &  12.1406 &  12.1846 & 1.0327  & 0.22081 & 0.33524 &  12.3241 &  12.3810 & 1.3863  & 0.249843 & 0.38244 &  11.1687 &  11.2062 & 1.6654  & 0.26816 & 0.30033\\
+			$f_{13}$ & -9.84538 & -9.81519 & 3.08913 & 0.64179 & 0.33395 & -9.99358 & -9.83176 & 2.8004  & 0.570625 & 0.36597 & -14.2779 & -14.2906 & 3.0633  & 0.64610 & 0.26203\\
+			$f_{14}$ & -3.06596 & -3.01798 & 1.77323 & 0.34881 & 0.32732 & -2.79774 & -2.7704  & 1.99943 & 0.351876 & 0.37171 & -4.58139 & -4.52052 & 2.61897 & 0.44045 & 0.29620\\		
+			
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Mean & 350618 & 213042 & 4518991 & 518453 & 0.23163 & 96804105 & 96159836 & 121288396 & 21721288 & 0.33352 & 1416090 & 1363332 & 2822570 & 533369 & 0.23952\\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE_30}
+	\end{table}
+
+
+% DE
+%----------------------------------------------------------------------------------------
+% DE1
+
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for ILS, GA, and DE/best/1/exp in 10 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+		\noalign{\smallskip}\hline\noalign{\smallskip}
+		Problem & \multicolumn{5}{c}{Iterative Local Search}& \multicolumn{5}{|c|}{Genetic Algorithm}
+	        &  \multicolumn{5}{c}{Differential Evolution (best/1/exp)} \\ 
+		\noalign{\smallskip}\hline\noalign{\smallskip}
+			 & Avg & Median & Range & SD & T(s) & Avg & Median
+	                 & Range & SD & T(s) & Avg & Median & Range & SD &
+	                 T(s) \\ 
+	\noalign{\smallskip}\hline\noalign{\smallskip}
+	 			$f_{1}$  & -3573.22 & -3548.24 & 552.7   & 146.465 & 0.2307  & -4176.13 & -4178.55 & 36.84   & 8.82272 & 0.08685 & -3832.41 & -3890.96 & 1059.51 & 240.894 & 0.10871\\
+				$f_{2}$  &  0.02644 &  0.02365 & 0.07988 & 0.02154 & 0.06106 &  5.72411 &  4.91465 & 27.8500 & 4.00083 & 0.08033 &  0.00475 &  0.00415 & 0.01435 & 0.00281 & 0.08292\\
+				$f_{3}$  &  12.4029 &  11.9822 & 12.3458 & 2.87413 & 0.02203 &  3289.79 &  2300.89 & 19541.9 & 3360.49 & 0.09204 &  73.1204 &  28.3278 & 1028.60 & 126.416 & 0.09707\\
+				$f_{4}$  & -582.655 & -491.998 & 1249.46 & 349.317 & 0.00023 & -1987.59 & -1987.87 & 17.41   & 4.00164 & 0.09262 & -1970.10 & -1969.97 & 21.68   & 4.86361 & 0.13077\\
+				$f_{5}$  &  2.90431 &  2.67160 & 5.49358 & 1.50371 & 0.77287 &  0.93584 &  1.0158  & 0.60774 & 0.15318 & 0.09403 &  0.68853 &  0.68734 & 0.64512 & 0.11295 & 0.12736\\
+				$f_{6}$  & -10.0415 & -10.0036 & 2.67754 & 0.60954 & 0.00153 & -13.1038 & -13.1372 & 0.9009  & 0.19049 & 0.09269 & -11.9926 & -11.9884 & 1.2744  & 0.21064 & 0.17124\\
+				$f_{7}$  &  34.3395 &  34.2363 & 12.5782 & 2.60806 & 0.02680 &  6.23605 &  6.22802 & 6.05244 & 1.39085 & 0.09567 &  3.14954 &  3.08748 & 2.892   & 0.58377 & 0.10150\\
+				$f_{8}$  &  74.4458 &  74.2790 & 78.0948 & 16.6686 & 0.00673 & -25.0689 & -25.1541 & 6.4113  & 1.32092 & 0.10064 & -20.7944 & -21.1628 & 11.4993 & 2.58177 & 0.11278\\
+				$f_{9}$  &  143.849 &  144.408 & 27.156  & 7.29175 & 0.00393 &  10.3034 &  10.1336 & 17.4389 & 3.96686 & 0.09162 &  0.33048 &  0.30682 & 0.58891 & 0.11243 & 0.09062\\
+				$f_{10}$ & -5351.81 & -5354.57 & 1709.54 & 449.488 & 0.48381 & -6602.60 & -6523.94 & 2639.06 & 516.291 & 0.09539 & -4211.73 & -4212.55 & 1995.98 & 350.215 & 0.20236\\
+				$f_{11}$ & -2921.47 & -2915.29 & 578.13  & 152.974 & 0.00805 & -3767.89 & -3760.42 & 549.12  & 125.620 & 0.08889 & -2442.54 & -2436.43 & 860.21  & 182.351 & 0.20240\\
+				$f_{12}$ &  3.19323 &  3.16982 & 1.03129 & 0.28277 & 0.00426 &  1.20919 &  1.18109 & 1.70555 & 0.29672 & 0.09350 &  2.67576 &  2.68145 & 0.76149 & 0.16632 & 0.19861\\
+				$f_{13}$ & -5.65787 & -5.67143 & 2.05513 & 0.48550 & 0.00372 & -9.34599 & -9.35668 & 0.68065 & 0.14200 & 0.09629 & -7.65443 & -7.65045 & 1.91915 & 0.40761 & 0.13025\\
+				$f_{14}$ & -0.69619 & -0.73676 & 1.17594 & 0.29398 & 0.00096 & -6.60200 & -6.49318 & 3.27495 & 0.48602 & 0.09370 & -3.50882 & -3.51655 & 1.79211 & 0.40070 & 0.15582\\
+				$f_{15}$ & -6.40397 & -6.66444 & 6.73285 & 1.39996 & 0.00328 & -2.78525 & -1.55306 & 8.74724 & 2.77551 & 0.08897 & -2.82619 & -1.57213 & 9.21059 & 3.05116 & 0.07292\\
+				
+	\noalign{\smallskip}\hline\noalign{\smallskip}
+				Mean & -812.053 & -804.160 & 282.617 & 75.4857 & 0.10866 & -885.128 & -945.474 & 1523.86 & 268.663 & 0.09222 & -828.240 & -834.714 & 333.105 & 60.8247 & 0.13236\\
+	\noalign{\smallskip}\hline\noalign{\smallskip}
+	\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE1_10}
+	\end{table}
+\end{landscape}
+
+\pagebreak
+
+\begin{landscape}
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for ILS, GA, and DE/best/1/exp in 20 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Problem & \multicolumn{5}{c}{Iterative Local Search}& \multicolumn{5}{|c|}{Genetic Algorithm}
+			&  \multicolumn{5}{c}{Differential Evolution (best/1/exp)} \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			& Avg & Median & Range & SD & T(s) & Avg & Median
+			& Range & SD & T(s) & Avg & Median & Range & SD &
+			T(s) \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			$f_{1}$  & -6713.41 & -6632.61 & 1678.02 & 355.689 & 1.88618 & -7700.43 & -7715.74 & 743.37  & 167.837 & 0.11335 & -4066.83 & -4044.23 & 1403.78 & 301.023 & 0.24644\\
+			$f_{2}$  &  0.06253 & 0.054451 & 0.16798 & 0.05379 & 0.35641 &  391.940 & 363.3755 & 766.085 & 143.778 & 0.1099  &  9.21348 &  8.15146 & 30.1959 & 5.17659 & 0.11699\\
+			$f_{3}$  &  31.6266 & 30.7821  & 37.3973 & 7.98689 & 0.13816 &  2581658 & 2217230  & 8413832 & 1696069 & 0.16208 &  28851.1 &  19874.0 & 263239  & 31611.0 & 0.119  \\
+			$f_{4}$  & -198.734 & -266.483 & 1889.47 & 448.573 & 0.02048 & -3858.67 & -3859.33 & 110.48  & 23.9797 & 0.16874 & -3842.75 & -3842.15 & 87.37   & 16.4009 & 0.15939\\
+			$f_{5}$  &  0.60687 & 0.570269 & 0.36125 & 0.10553 & 9.10991 &  3.28126 & 3.191125 & 4.32585 & 0.81125 & 0.17219 &  1.05707 &  1.05306 & 0.34871 & 0.04283 & 0.13114\\
+			$f_{6}$  & -20.0025 & -20.1115 & 2.1199  & 0.61790 & 0.00726 & -26.0518 & -26.0718 & 2.4264  & 0.45639 & 0.17534 & -21.8977 & -21.958  & 2.9418  & 0.52714 & 0.24817\\
+			$f_{7}$  &  79.4780 & 79.79505 & 10.762  & 3.01424 & 0.2435  &  30.2597 & 30.4624  & 19.8864 & 3.76810 & 0.18158 &  28.2205 &  28.2178 & 19.6238 & 4.28851 & 0.17024\\
+			$f_{8}$  &  203.746 & 206.1195 & 105.751 & 23.3296 & 0.05120 & -18.2855 & -18.5622 & 36.0952 & 7.46914 & 0.17230 &  7.29205 &  7.42419 & 36.4385 & 7.76453 & 0.16940\\
+			$f_{9}$  &  324.010 & 326.855  & 48.93   & 10.5758 & 0.04179 &  83.5881 & 82.87005 & 61.2767 & 12.1416 & 0.17450 &  46.0381 &  46.1045 & 36.9832 & 8.43617 & 0.13987\\
+			$f_{10}$ & -9904.06 & -9837.24 & 2794.59 & 528.468 & 4.35773 & -11536.7 & -11509.2 & 4564.43 & 831.925 & 0.17535 & -5336.97 & -5291.41 & 2605.34 & 430.420 & 0.30067\\
+			$f_{11}$ & -5616.72 & -5615.24 & 1034.89 & 295.387 & 0.06523 & -6697.23 & -6704.77 & 1243.58 & 243.920 & 0.16849 & -3109.77 & -3096.47 & 1404.78 & 266.862 & 0.29929\\
+			$f_{12}$ &  7.27488 & 7.38041  & 2.81721 & 0.57823 & 0.03219 &  4.07366 & 4.094265 & 2.05436 & 0.43959 & 0.17178 &  7.32333 &  7.34228 & 1.06215 & 0.19573 & 0.28271\\
+			$f_{13}$ & -9.58232 & -9.45981 & 2.99568 & 0.74011 & 0.02518 & -16.4700 & -16.4495 & 3.4316  & 0.64308 & 0.17902 & -8.44269 & -8.36709 & 2.83707 & 0.58818 & 0.25933\\
+			$f_{14}$ & -1.06049 & -1.02543 & 1.43264 & 0.36678 & 0.00373 & -10.4523 & -10.5127 & 5.1575  & 1.06563 & 0.17053 & -3.09349 & -3.05453 & 1.81532 & 0.33962 & 0.26706\\
+			
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Mean & -1454.45 & -1448.70 & 507.313 & 111.699 & 1.08926 & 182307 & 156275 & 601528 & 121250 & 0.16394 & 897.179 & 261.760 & 19205.1 & 2176.87 & 0.20783\\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE1_20}
+	\end{table}
+
+	\begin{table}
+		\tiny
+		\centering
+		\caption{Computation comparison for ILS, GA, and DE/best/1/exp in 30 dimensions}
+		\label{Tab1d}
+		\begin{tabular}{c|ccccc|ccccc|ccccc}
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Problem & \multicolumn{5}{c}{Iterative Local Search}& \multicolumn{5}{|c|}{Genetic Algorithm}
+			&  \multicolumn{5}{c}{Differential Evolution (best/1/exp)} \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			& Avg & Median & Range & SD & T(s) & Avg & Median
+			& Range & SD & T(s) & Avg & Median & Range & SD &
+			T(s) \\ 
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			$f_{1}$  & -9527.08 & -9430.32 & 2072.44 & 495.902 & 6.32335 & -10230.0 & -10224.8 & 1605.78 & 318.308 & 0.13256 & -4468.39 & -4477.94 & 2181.72 & 382.854 & 0.30287\\
+			$f_{2}$  &  0.06410 &  0.00777 & 0.26016 & 0.08636 & 1.4998  &  2794.16 &  2751.68 & 3089.31 & 712.064 & 0.12878 &  281.058 &  278.273 & 552.193 & 128.777 & 0.1369 \\
+			$f_{3}$  &  57.3219 &  52.1297 & 85.0168 & 19.2213 & 0.38987 & 97480780 & 90966800 & 243270800 & 43333622 & 0.18211 & 5278506 & 3214745 & 67777447 & 7775398 & 0.139\\
+			$f_{4}$  &  99.6048 &  256.305 & 2639.73 & 625.062 & 0.07035 & -5488.18 & -5489.28 & 427.89  & 70.2765 & 0.19060 & -5660.24 & -5665.19 & 169.52  & 36.0787 & 0.16130\\
+			$f_{5}$  &  1.10655 &  1.10575 & 0.116   & 0.02836 & 31.9801 &  19.6339 &  19.5284 & 17.336  & 3.79079 & 0.19325 &  2.73123 &  2.52172 & 4.62583 & 0.88190 & 0.15358\\
+			$f_{6}$  & -29.5246 & -29.4719 & 3.9962  & 0.83478 & 0.02300 & -36.9056 & -36.8528 & 3.4591  & 0.65372 & 0.19582 & -30.9149 & -30.8490 & 3.0272  & 0.53735 & 0.29405\\
+			$f_{7}$  &  125.009 &  125.402 & 21.563  & 4.19558 & 0.80187 &  69.6765 &  69.9852 & 25.967  & 5.33954 & 0.21035 &  72.5874 &  71.6857 & 41.1703 & 7.50465 & 0.22429\\
+			$f_{8}$  &  347.698 &  353.78  & 137.603 & 31.4917 & 0.14984 &  39.8534 &  39.2247 & 87.0006 & 15.1161 & 0.19287 &  63.7954 &  63.3944 & 80.6115 & 16.5474 & 0.19191\\
+			$f_{9}$  &  505.267 &  506.346 & 54.001  & 13.2513 & 0.10199 &  210.152 &  210.935 & 107.436 & 20.1423 & 0.19858 &  160.564 &  158.519 & 138.235 & 25.2686 & 0.17031\\
+			$f_{10}$ & -14298.9 & -14155.6 & 3296.0  & 749.429 & 14.9107 & -14635.1 & -14693.1 & 4334.9  & 929.969 & 0.19735 & -6172.62 & -6075.52 & 2683.87 & 503.846 & 0.35769\\
+			$f_{11}$ & -8167.85 & -8166.69 & 1321.96 & 292.362 & 0.26390 & -8675.03 & -8679.99 & 1689.55 & 407.266 & 0.18933 & -3484.30 & -3438.85 & 1564.1  & 300.273 & 0.34563\\
+			$f_{12}$ &  12.0417 &  12.0922 & 1.6751  & 0.36885 & 0.09500 &  7.93813 &  7.96789 & 2.26469 & 0.48373 & 0.19360 &  12.1406 &  12.1846 & 1.0327  & 0.22081 & 0.33524\\
+			$f_{13}$ & -13.2246 & -13.2485 & 3.469   & 0.93516 & 0.08412 & -20.9753 & -20.9974 & 4.6779  & 0.85301 & 0.20389 & -9.84538 & -9.81519 & 3.08913 & 0.64179 & 0.33395\\
+			$f_{14}$ & -1.56171 & -1.34073 & 2.76507 & 0.78806 & 0.00908 & -11.6296 & -11.5492 & 5.37561 & 1.07575 & 0.19387 & -3.06596 & -3.01798 & 1.77323 & 0.34881 & 0.32732\\
+			
+			
+			
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			Mean & -2059.34 & -2032.63 & 642.706 & 148.930 & 3.78020 & 6960344 & 6495053 & 17377300 & 3095436 & 0.18592 & 350618 & 213042 & 4518991 & 518453 & 0.23163\\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\multicolumn{16}{l}{\tiny $^1$ 3.2GHz AMD Ryzen 7 1700X, 16 GB RAM}
+		\end{tabular}\label{DE1_30}
+	\end{table}
+\end{landscape}
+
+% DE1
+
+
+
+\end{document}
