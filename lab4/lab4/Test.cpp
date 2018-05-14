@@ -110,11 +110,15 @@ void Test::writeTimes(const double * d_TIMES, const size_t ui_SIZE)
 		{
 			for (std::size_t i = 0; i < ui_SIZE; i++)
 			{
-				file << d_TIMES[i];
+				file << (d_TIMES[i] / static_cast<double>(test_info.ui_iterations * test_info.ui_numThreads));
 				if (i + 1 < ui_SIZE)
 				{
 					file << ", ";
 				} // end if
+				else
+				{
+					file << "\n";
+				} // end else
 			} // end for
 		} // end if
 	} // end if

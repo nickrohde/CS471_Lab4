@@ -18,7 +18,7 @@
 
 #pragma region Typedefs:
 	typedef std::function<double(const double*, const std::size_t)> FitnessFunction;
-	typedef std::function < Results*(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, const PSO_Info&)> _PSO_;
+	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const PSO_Info&)> _PSO_;
 
 #pragma endregion
 
@@ -82,7 +82,10 @@ public:
 			void runTest(F f, Args ...args)
 			{
 				double* dp_times = new double[((test_info.ui_maxDim - test_info.ui_minDim) / test_info.ui_deltaDim) + 1]; // stores times per iteration for each dimension
-				Results** res = new Results*[test_info.ui_iterations];
+
+				Results** res = new Results*[test_info.ui_numThreads];
+
+				auto threads = std::vector<std::thread>(test_info.ui_numThreads);
 
 				for (std::size_t i = 0; i < fitnessFunctions.size(); i++)
 				{
@@ -95,36 +98,47 @@ public:
 					// run tests for all dimensions
 					for (std::size_t j = test_info.ui_minDim; j <= test_info.ui_maxDim; j += test_info.ui_deltaDim)
 					{
+						if (i == 14 && j > 10) continue;
+
 						Population_Info pop_info(test_info.ui_popSize, j, test_info.ui_generations);
 
-						// test each dimension k times
-						for (std::size_t k = 0; k < test_info.ui_iterations; k++)
+						double d_solution = getDoubleMax();
+
+						// spawn k threads to run a certain number of tests each
+						for (std::size_t k = 0; k < test_info.ui_numThreads; k++)
 						{
-							res[k] = f(test_info.ui_numThreads, fitnessFunctions[i], pop_info, da_ranges[i], args...);
+							res[k] = new Results[test_info.ui_iterations];
+							threads[k] = std::thread(f, test_info.ui_iterations, fitnessFunctions[i], pop_info, da_ranges[i], res[k], args...);
 						} // end for k
+
+						// wait for all tests to end
+						for (size_t k = 0; k < test_info.ui_numThreads; k++)
+						{
+							threads[k].join();
+						} // end for
 
 						// write test data to file
 						if (test_info.b_storeData)
 						{
-							dumpData(const_cast<const Results**>(res), test_info.ui_iterations, test_info.ui_numThreads, makeFileName(j, i));
+							dumpData(const_cast<const Results**>(res), test_info.ui_numThreads, test_info.ui_iterations, makeFileName(j, i));
 						} // end if
-						else // print solution to console
-						{
-							double d_solution = getDoubleMax();
-							for (std::size_t v = 0; v < test_info.ui_iterations; v++)
-							{
-								for (std::size_t y = 0; y < test_info.ui_numThreads; y++)
-								{
-									if (res[v][y].d_bestValue < d_solution)
-									{
-										d_solution = res[v][y].d_bestValue;
-									} // end if
-								} // end for y
-							} // end for v
-							std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
-						} // end else
 
-						deleteResults(res, test_info.ui_iterations); // delete results from this test
+						for (std::size_t v = 0; v < test_info.ui_numThreads; v++)
+						{
+							for (std::size_t y = 0; y < test_info.ui_iterations; y++)
+							{
+								assert(res[v][y].d_time > 0);
+								dp_times[(j / test_info.ui_deltaDim) - 1] += res[v][y].d_time;
+								assert(dp_times[(j/ test_info.ui_deltaDim)-1] > 0);
+								if (res[v][y].d_bestValue < d_solution)
+								{
+									d_solution = res[v][y].d_bestValue;
+								} // end if
+							} // end for y
+						} // end for v
+						//std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
+
+						deleteResults(res, test_info.ui_numThreads); // delete results from this test
 					} // end for j
 
 					writeTimes(dp_times, ((test_info.ui_maxDim - test_info.ui_minDim) / test_info.ui_deltaDim) + 1);
@@ -162,11 +176,6 @@ private:
 	#pragma endregion
 
 	#pragma region Private Methods:
-		/// <summary>Generates the matrix for shekel's foxholes.</summary>
-		/// <param name="da_A">A valid pointer to an array of 30 uninitialized double pointers.</param>
-		/// <remarks>This function is only there to remove some code from the constructor, it is inline and will simply be placed in the constructor by the compiler.</remarks>
-		void makeMatrix(double**& da_A);
-
 		/// <summary>Generates the matrix containing the ranges for all cost functions.</summary>
 		/// <param name="da_A">A valid pointer to an array of 15 uninitialized double pointers.</param>
 		/// <remarks>This function is only there to remove some code from the constructor, it is inline and will simply be placed in the constructor by the compiler.</remarks>

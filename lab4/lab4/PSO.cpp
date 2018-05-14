@@ -2,7 +2,7 @@
 
 
 
-void _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO, Results* res)
+Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO)
 {
 	timePoint compute_end = highRes_Clock::now();
 	timePoint compute_start = highRes_Clock::now();
@@ -26,30 +26,20 @@ void _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bound
 
 	duration time_to_compute = std::chrono::duration_cast<duration>(compute_end - compute_start);
 
-	res->d_bestValue = population->bestFitness();
-	res->d_time = time_to_compute.count();
+	assert(time_to_compute.count() > 0);
+
+	Results* res = new Results(population->bestFitness(), time_to_compute.count());
 
 	delete population;
+
+	return res;
 } // end method _PSO
 
 
-Results* PSO(const std::size_t NUM_THREADS, const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO)
+void PSO(const std::size_t ui_ITERATIONS, const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, Results* res, const PSO_Info& PSO_INFO)
 {
-	std::thread* threads = new std::thread[NUM_THREADS];
-
-	Results* results = new Results[NUM_THREADS];
-
-	for (size_t i = 0; i < NUM_THREADS; i++)
+	for (size_t i = 0; i < ui_ITERATIONS; i++)
 	{
-		threads[i] = std::thread(_PSO, f, POP_INFO, BOUNDS, PSO_INFO, &(results[i]));
+		res[i] = *(_PSO(f, POP_INFO, BOUNDS, PSO_INFO));
 	} // end for
-
-	for (size_t i = 0; i < NUM_THREADS; i++)
-	{
-		threads[i].join();
-	} // end for
-
-	delete[] threads;
-
-	return results;
 } // end method PSO

@@ -14,7 +14,7 @@
 /// <param name="BOUNDS">The problem bounds of <paramref name="f"/>.</param>
 /// <param name="PSO_INFO">PSO specific info.</param>
 /// <param name="res">Out parameter.</param>
-void _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO, Results* res);
+Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO);
 
 
 /// <summary>Optimizes <paramref name="f"/> using <paramref name="NUM_THREADS"/> particle swarms.</summary>
@@ -24,7 +24,7 @@ void _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bound
 /// <param name="BOUNDS">The problem bounds of <paramref name="f"/>.</param>
 /// <param name="PSO_INFO">PSO specific info.</param>
 /// <returns>A pointer to a <see cref="Results"/> array of size <paramref name="NUM_THREADS"/> containg the test results.</returns>
-Results* PSO(const std::size_t NUM_THREADS, const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO);
+void PSO(const std::size_t ui_ITERATIONS, const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, Results* res, const PSO_Info& PSO_INFO);
 
 
 

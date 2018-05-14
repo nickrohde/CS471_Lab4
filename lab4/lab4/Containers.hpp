@@ -74,6 +74,14 @@ struct Population_Info
 /// <summary>Stores results.</summary>
 struct Results
 {
+	Results(void) { d_bestValue = d_time = getDoubleMax(); }
+
+	Results(double best, double time) { d_bestValue = best; d_time = time; }
+
+	Results(const Results& OTHER) { d_bestValue = OTHER.d_bestValue; d_time = OTHER.d_time; }
+
+	void operator=(const Results& OTHER) { d_bestValue = OTHER.d_bestValue; d_time = OTHER.d_time; }
+
 	/// <summary>Best value found during test.</summary>
 	double	d_bestValue,
 	/// <summary>Average time for test.</summary>
