@@ -237,7 +237,7 @@ bool IniParser::extractKeyPair(const std::string& s_line, KeyPair& keyPair)
 			ui_startValue++;
 		} // end while
 
-		while (ui_endKey > 0 && s_line.at(ui_endKey) != '=' && s_line.at(ui_endKey) != ' ')
+		while (ui_endKey > 0 && !isalnum(s_line.at(ui_endKey)))
 		{
 			ui_endKey--;
 		} // end while
@@ -245,7 +245,7 @@ bool IniParser::extractKeyPair(const std::string& s_line, KeyPair& keyPair)
 		ui_endValue = ui_startValue;
 
 		// find the end of the value component
-		while (ui_endValue < s_line.length() && s_line.at(ui_endValue) != ';')
+		while (ui_endValue < s_line.length() && s_line.at(ui_endValue) != ';' && s_line.at(ui_endValue) != ' ')
 		{
 			ui_endValue++;
 		} // end while

@@ -65,7 +65,7 @@ public:
 		std::string trash;
 		T t;
 
-		if (!isValid() || contains(s_group))
+		if (!isValid() || !contains(s_group))
 		{
 			std::stringstream error("The group '");
 
@@ -73,7 +73,7 @@ public:
 
 			throw std::invalid_argument(error.str());
 		} // end if
-		if (contains(s_group, s_key))
+		if (!contains(s_group, s_key))
 		{
 			std::stringstream error("The group '");
 
