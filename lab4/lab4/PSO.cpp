@@ -28,6 +28,8 @@ void _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bound
 
 	res->d_bestValue = population->bestFitness();
 	res->d_time = time_to_compute.count();
+
+	delete population;
 } // end method _PSO
 
 

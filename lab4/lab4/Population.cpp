@@ -93,6 +93,7 @@ void Population::setFitness(const std::size_t j, const double d_fitness)
 				ui_bestIndex = j; // update global best
 			} // end if
 		} // end if
+		return;
 	} // end if
 
 	throw std::runtime_error("Memory allocation failed.");
@@ -114,15 +115,11 @@ void Population::instantiate(double **& p_arr, const std::size_t ui_HEIGHT, cons
 
 	for (std::size_t i = 0; i < ui_HEIGHT; i++)
 	{
-		// make sure inner arrays don't exist yet
+		p_arr[i] = new double[ui_WIDTH];
+
 		if (p_arr[i] == nullptr)
 		{
-			p_arr[i] = new double[ui_WIDTH];
-
-			if (p_arr[i] == nullptr)
-			{
-				throw std::runtime_error("Memory allocation failed.");
-			} // end if
+			throw std::runtime_error("Memory allocation failed.");
 		} // end if
 	} // end for
 } // end method instantiate

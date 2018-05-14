@@ -9,6 +9,14 @@
 /// <summary>Stores an individual's fitness value.</summary>
 struct Fitness
 {
+	Fitness(void) { d_currentfitness = d_bestFitness = getDoubleMax(); }
+
+	Fitness(double cur, double best) { d_bestFitness = best; d_currentfitness = cur; }
+
+	Fitness(const Fitness& OTHER) { (*this) = OTHER; }
+
+	void operator=(const Fitness& OTHER) { d_currentfitness = OTHER.d_currentfitness; d_bestFitness = OTHER.d_bestFitness; }
+
 	///<summary>Current fitness value.</summary>
 	double d_currentfitness,
 	///<summary>Best ever fitness value.</summary>
@@ -46,6 +54,12 @@ struct Bounds
 /// <summary>Stores the population information.</summary>
 struct Population_Info
 {
+	Population_Info(void) { ui_size = ui_dim = ui_generations = 0; }
+
+	Population_Info(std::size_t size, std::size_t dim, std::size_t gen) { ui_size = size; ui_dim = dim; ui_generations = gen; }
+
+	Population_Info(const Population_Info& OTHER) { (*this) = OTHER; }
+
 	/// <summary>Size of the population.</summary>
 	std::size_t ui_size,
 
@@ -71,6 +85,10 @@ struct Results
 /// <summary>Stores PSO constants.</summary>
 struct PSO_Info
 {
+	PSO_Info(void) { C1 = C2 = K = 0.0; }
+
+	PSO_Info(double c1, double c2, double k) { C1 = c1; C2 = c2; K = k; }
+
 	double C1, C2, K;
 }; // end Struct PSO_Info
 

@@ -1,5 +1,6 @@
 #include "Driver.hpp"				// class header
 #include "IniParser/IniParser.hpp"	// IniParser class
+#include "PSO.hpp"
 
 #define _DEBUG 1
 
@@ -98,7 +99,7 @@ void Driver::initialize(const std::string  s_fileName)
 
 		test_info.d_PSO_c1 = parser->getKeyAs<double>("PSO", "c1");
 		test_info.d_PSO_c2 = parser->getKeyAs<double>("PSO", "c2");
-		test_info.d_PSO_k = parser->getKeyAs<double>("PSO", "k");
+		test_info.d_PSO_k = parser->getKeyAs<double>("PSO", "c3");
 		
 	} // end try
 	catch (invalid_argument e)
@@ -246,7 +247,15 @@ int Driver::run(void)
 
 			compute_start = highRes_Clock::now(); // start timer for whole run
 
-			assert(TODO);
+			assert(true);
+			if (test != nullptr)
+			{
+				test->runTest<_PSO_>(PSO, PSO_Info(0.8, 1.2, 0.9));
+			} // end if
+			else
+			{
+
+			} // end else
 
 			compute_end = highRes_Clock::now();
 			time_to_compute = std::chrono::duration_cast<duration>(compute_end - compute_start);

@@ -73,7 +73,7 @@
 
 			for (std::size_t j = 0; j < ui_length;j ++)
 			{
-				assert(TODO);
+				//assert(TODO);
 				dp_velocity[i][j] = dp_velocity[i][j] + d_C1 * getRandomRealInRange<double>(0.0, 1.0) * (fitnesses[i].d_bestFitness - dp_particle[j])
 													  + d_C2 * getRandomRealInRange<double>(0.0, 1.0) * (best(j) - dp_particle[j]);
 
