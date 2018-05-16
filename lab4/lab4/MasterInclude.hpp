@@ -2,7 +2,6 @@
 
 #if _WIN64 || _WIN32
 	#include <Windows.h>
-	#include <cassert>
 	#include <omp.h>
 #endif
 
@@ -25,5 +24,6 @@
 #include <list>
 #include <stdlib.h>
 #include <map>
+#include <cassert>
 #include <cmath>
 #include <cstdarg>
