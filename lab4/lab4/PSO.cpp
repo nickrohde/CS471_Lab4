@@ -17,7 +17,7 @@ Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const B
 	{
 		for (size_t j = 0; j < population->size(); j++)
 		{
-			population->updateVelocity(j);
+			population->update(j);
 			population->evaluate(f, j);
 		} // end for j
 	} // end for i

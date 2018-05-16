@@ -247,14 +247,14 @@ int Driver::run(void)
 
 			compute_start = highRes_Clock::now(); // start timer for whole run
 
-			assert(true);
 			if (test != nullptr)
 			{
 				test->runTest<_PSO_>(PSO, PSO_Info(0.8, 1.2, 0.9));
 			} // end if
 			else
 			{
-
+				cout << "No test settings available!" << endl;
+				break;
 			} // end else
 
 			compute_end = highRes_Clock::now();

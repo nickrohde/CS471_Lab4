@@ -19,8 +19,8 @@ public:
 		PS_Population(const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO);
 
 		/// <summary>Constructs a new population that is a copy of the population <paramref name="other"/>.</summary>
-		/// <param name="other">The population to copy.</param>
-		PS_Population(const PS_Population& other);
+		/// <param name="OTHER">The population to copy.</param>
+		PS_Population(const PS_Population& OTHER);
 
 		/// <summary>Constructs a new population that is a copy of the population <paramref name="other"/>.</summary>
 		/// <param name="other">The population to copy.</param>
@@ -43,7 +43,7 @@ public:
 
 		/// <summary>Updates the velocity of particle <paramref name="i"/>.</summary>
 		/// <param name="i">The particle's ID.</param>
-		void updateVelocity(const std::size_t i);
+		void update(const std::size_t i);
 
 	#pragma endregion
 
@@ -60,6 +60,9 @@ private:
 			 d_C2,
 	/// <summary>Velocity matrix.</summary>
 			 d_K;
+
+	std::size_t updateCounter,
+				updateFrequency;
 
 	#pragma endregion
 

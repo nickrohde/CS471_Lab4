@@ -8,21 +8,25 @@
 			d_C1 = PSO_INFO.C1;
 			d_C2 = PSO_INFO.C2;
 			d_K  = PSO_INFO.K;
+			updateCounter = 0;
+			updateFrequency = 5;
 
 			instantiate(dp_velocity, POP_INFO.ui_size, POP_INFO.ui_dim);
 			initializeVelocities();
 		} // end Constructor
 
 
-		PS_Population::PS_Population(const PS_Population & other) : Population(other)
+		PS_Population::PS_Population(const PS_Population & OTHER) : Population(OTHER)
 		{
-			d_C1 = other.d_C1;
-			d_C2 = other.d_C2;
-			d_K = other.d_K;
+			d_C1 = OTHER.d_C1;
+			d_C2 = OTHER.d_C2;
+			d_K = OTHER.d_K;
+			updateCounter = OTHER.updateCounter;
+			updateFrequency = OTHER.updateFrequency;
 
 			try
 			{
-				instantiate(dp_velocity, other.ui_size, other.ui_length);
+				instantiate(dp_velocity, OTHER.ui_size, OTHER.ui_length);
 			} // end try
 			catch(std::runtime_error e)
 			{
@@ -32,7 +36,7 @@
 
 			for (size_t i = 0; i < ui_size; i++)
 			{
-				memcpy(dp_velocity[i], other.dp_velocity[i], sizeof(double)*ui_length);
+				memcpy(dp_velocity[i], OTHER.dp_velocity[i], sizeof(double)*ui_length);
 			} // end for
 		} // end Copy Constructor
 
@@ -42,6 +46,8 @@
 			d_C1 = other.d_C1;
 			d_C2 = other.d_C2;
 			d_K = other.d_K;
+			updateCounter = other.updateCounter;
+			updateFrequency = other.updateFrequency;
 
 			deleteContents();
 
@@ -67,19 +73,34 @@
 		} // end method evaluate
 
 
-		void PS_Population::updateVelocity(const std::size_t i)
+		void PS_Population::update(const std::size_t i)
 		{
+			// pointer to current particle for convenience
 			double* dp_particle = (*this)[i];
 
 			for (std::size_t j = 0; j < ui_length;j ++)
 			{
-				//assert(TODO);
-				dp_velocity[i][j] = dp_velocity[i][j] + d_C1 * getRandomRealInRange<double>(0.0, 1.0) * (fitnesses[i].d_bestFitness - dp_particle[j])
-													  + d_C2 * getRandomRealInRange<double>(0.0, 1.0) * (best(j) - dp_particle[j]);
-
+				// update velocity
+				dp_velocity[i][j] = d_K * dp_velocity[i][j] + d_C1 * getRandomRealInRange<double>(0.0, 1.0) * (fitnesses[i].d_bestFitness - dp_particle[j])
+													        + d_C2 * getRandomRealInRange<double>(0.0, 1.0) * (best(j) - dp_particle[j]);
+				// update particle
 				dp_particle[j] += dp_velocity[i][j];
+
+				// make sure we didn't go out of bounds
+				if (dp_particle[j] > bounds.d_max)
+				{
+					dp_particle[j] = getRandomRealInRange<double>(bounds.d_min, bounds.d_max);
+				} // end if
+				else if (dp_particle[j] < bounds.d_min)
+				{
+					dp_particle[j] = getRandomRealInRange<double>(bounds.d_min, bounds.d_max); // make sure min isn't zero
+				} // end elif
+
+				// update fitness
+
 			} // end for
-		} // end method updateVelocity
+		} // end method update
+
 
 	#pragma endregion
 
@@ -112,7 +133,7 @@
 
 			delete[] dp_velocity;
 		} // end if
-	}
+	} // end method deleteContents
 
 #pragma endregion
 
