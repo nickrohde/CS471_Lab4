@@ -1,6 +1,7 @@
 #include "functions.hpp" // class header
 #include "utility.hpp"	 // math defines
 
+#pragma message("FUNC")
 
 inline double schwefelsFunction(const double* dp_VECT, const size_t ui_SIZE)
 {

@@ -16,92 +16,92 @@ const int i_SHEKEL_INDEX = 14;
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double schwefelsFunction(const double* dp_VECT, const size_t ui_SIZE);
+double schwefelsFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double firstDeJongsFunction(const double* dp_VECT, const size_t ui_SIZE);
+double firstDeJongsFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double rosenbrockFunction(const double* dp_VECT, const size_t ui_SIZE);
+double rosenbrockFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double rastriginFunction(const double* dp_VECT, const size_t ui_SIZE);
+double rastriginFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double griewangkFunction(const double* dp_VECT, const size_t ui_SIZE);
+double griewangkFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double sineEnvelopeSineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
+double sineEnvelopeSineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double stretchedVSineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
+double stretchedVSineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double ackleysOneFunction(const double* dp_VECT, const size_t ui_SIZE);
+double ackleysOneFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double ackleysTwoFunction(const double* dp_VECT, const size_t ui_SIZE);
+double ackleysTwoFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double eggHolderFunction(const double* dp_VECT, const size_t ui_SIZE);
+double eggHolderFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double ranaFunction(const double* dp_VECT, const size_t ui_SIZE);
+double ranaFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double pathologicalFunction(const double* dp_VECT, const size_t ui_SIZE);
+double pathologicalFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double michalewiczFunction(const double* dp_VECT, const size_t ui_SIZE);
+double michalewiczFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double masterCosineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
+double masterCosineWaveFunction(const double* dp_VECT, const size_t ui_SIZE);
 
 /// <summary>Cost function for testing an optimization strategy</summary>
 /// <param name="dp_VECT">The point at which the function is to be evaluated.</param>
 /// <param name="ui_SIZE">Length of <paramref name="dp_VECT"/>.</param>
 /// <param name="ui_M">The number of times to execute the outer loop of the function.</param>
 /// <returns>The value of the function evaluated at <paramref name="dp_VECT"/></returns>
-inline double shekelsFoxholesFunction(const double* dp_VECT, const size_t ui_SIZE, const std::size_t ui_M = 10);
+double shekelsFoxholesFunction(const double* dp_VECT, const size_t ui_SIZE, const std::size_t ui_M = 10);
 
 /// <summary>Gets a vector containg all 15 cost functions.</summary>
 /// <param name="da_A">A matrix for the outer loop of shekel's foxholes function.</param>

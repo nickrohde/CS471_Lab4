@@ -38,7 +38,7 @@ public:
 	/// <param name="value">The value that should be associated with <paramref name="s_key"/>.</param>
 	/// <returns>True on success, false otherwise.</returns>
 	template <typename T>
-	inline bool addKeyPair(const std::string& s_group, const std::string& s_key, const T value)
+	bool addKeyPair(const std::string& s_group, const std::string& s_key, const T value)
 	{
 		std::stringstream stream;
 
@@ -97,29 +97,29 @@ public:
 	} // end template getKeyAs
 
 	/// <summary>Deletes all groups and keys stored in the parser object.</summary>
-	inline void clear(void);
+	void clear(void);
 
 	/// <summary>Checks if there are any groups in the parser.</summary>
 	/// <returns>True if the parser contains at least 1 group, false otherwise.</returns>
-	inline bool empty(void);
+	bool empty(void);
 
 	/// <summary>Checks if the parser is currently in a valid state.</summary>
 	/// <returns>True if the parser is valid, false otherwise.</returns>
-	inline bool isValid(void);
+	bool isValid(void);
 
 	/// <summary>Accessor for the number of groups in the parser.</summary>
 	/// <returns>The number of groups in the parser.</returns>
-	inline size_t size(void);
+	size_t size(void);
 
 	/// <summary>Accessor for the number of keys in the specified group.</summary>
 	/// <param name="s_group">The group containing the key.</param>
 	/// <returns>The number of keys in the specified group, if the group exists.</returns>
-	inline size_t groupSize(const std::string& s_group);
+	size_t groupSize(const std::string& s_group);
 
 	/// <summary>Checks if the given group exists.</summary>
 	/// <param name="s_group">The group to check.</param>
 	/// <returns>True if the group exists, false otherwise.</returns>
-	inline bool contains(const std::string& s_group)
+	bool contains(const std::string& s_group)
 	{
 		if (isValid())
 		{
@@ -133,7 +133,7 @@ public:
 	/// <param name="s_group">The group containing the key.</param>
 	/// <param name="s_key">The key to check.</param>
 	/// <returns>True if the group contains the specified key, false otherwise.</returns>
-	inline bool contains(const std::string& s_group, const std::string& s_key)
+	bool contains(const std::string& s_group, const std::string& s_key)
 	{
 		if (isValid())
 		{
@@ -146,6 +146,11 @@ public:
 private:
 	struct KeyPair
 	{
+		KeyPair(void) { key = value = ""; }
+		KeyPair(const std::string k, const std::string v) { key = k; value = v; }
+		KeyPair(const KeyPair& OTHER) { (*this) = OTHER; }
+		KeyPair& operator=(const KeyPair& OTHER) { key = OTHER.key; value = OTHER.value; return *this; }
+
 		std::string key;
 		std::string value;
 	}; // end struct KeyPair
@@ -160,7 +165,7 @@ private:
 	void parseFile(const std::string& s_fileName); // parses the given *.ini file into values
 
 	/// <summary>Instantiates the values data structure.</summary>
-	inline void instantiate(void);
+	void instantiate(void);
 
 	/// <summary>Adds the key-value pairs <paramref name="pairs"/> to the group <paramref name="s_group"/>.</summary>
 	/// <param name="s_group">The group to which the key should be added.</param>

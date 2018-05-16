@@ -39,7 +39,7 @@ public:
 		/// <param name="f">The function to determine the fitness of an individual.</param>
 		virtual void evaluateAll(const FitnessFunction& f);
 
-		inline void evaluate(const FitnessFunction& f, const std::size_t i);
+		void evaluate(const FitnessFunction& f, const std::size_t i);
 
 		/// <summary>Updates the velocity of particle <paramref name="i"/>.</summary>
 		/// <param name="i">The particle's ID.</param>

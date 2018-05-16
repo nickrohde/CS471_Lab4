@@ -1,5 +1,7 @@
 #include "IniParser.hpp"
 
+#pragma message("INI")
+
 using namespace std;
 
 IniParser::IniParser(const string& s_fileName)

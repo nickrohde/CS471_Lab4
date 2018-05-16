@@ -1,6 +1,7 @@
 #include "MasterInclude.hpp" // everything that could possibly be needed
 #include "Driver.hpp"		 // Driver class
 
+#pragma message("MAIN")
 
 #define DEBUG 0
 

@@ -1,5 +1,6 @@
 #include "PSO.hpp"
 
+#pragma message("PSO")
 
 
 Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO)

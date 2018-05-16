@@ -1,6 +1,7 @@
 #include "Test.hpp"				// class header
 #include "functions.hpp"		// cost functions
 
+#pragma message("TEST")
 
 using namespace std;
 
