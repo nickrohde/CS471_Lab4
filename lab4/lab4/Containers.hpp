@@ -101,4 +101,14 @@ struct PSO_Info
 }; // end Struct PSO_Info
 
 
+struct FF_Info
+{
+	FF_Info(void) {}
+	FF_Info(double a, double b, double g) { alpha = a; beta = b; gamma = g; }
+	FF_Info(const FF_Info& OTHER) { (*this) = OTHER; }
+
+	double alpha, beta, gamma;
+};
+
+
 #endif // !_CONTAINER_H
