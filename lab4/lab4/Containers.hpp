@@ -104,10 +104,10 @@ struct PSO_Info
 struct FF_Info
 {
 	FF_Info(void) {}
-	FF_Info(double a, double b, double g) { alpha = a; beta = b; gamma = g; }
+	FF_Info(double a, double b, double g, double i) { alpha = a; beta = b; gamma = g; intensity = i; }
 	FF_Info(const FF_Info& OTHER) { (*this) = OTHER; }
 
-	double alpha, beta, gamma;
+	double alpha, beta, gamma, intensity;
 };
 
 

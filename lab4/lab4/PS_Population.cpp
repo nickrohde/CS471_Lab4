@@ -60,21 +60,6 @@
 	#pragma endregion
 
 	#pragma region Operations:
-		void PS_Population::evaluateAll(const FitnessFunction& f)
-		{
-			for (std::size_t i = 0; i < ui_size; i++)
-			{
-				evaluate(f, i);
-			} // end for
-		} // end method evaluateAll 
-
-
-		inline void PS_Population::evaluate(const FitnessFunction& f, const std::size_t i)
-		{
-			setFitness(i, f(dp_pop[i], ui_length));
-		} // end method evaluate
-
-
 		void PS_Population::update(const std::size_t i)
 		{
 			// pointer to current particle for convenience

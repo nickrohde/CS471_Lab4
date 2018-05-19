@@ -5,10 +5,9 @@
 
 #include "Population.hpp"
 
-
+/// <summary>Population of particles for the particle swarm algorithm.</summary>
 class PS_Population : public Population
 {
-
 #pragma region Public:
 public:
 	#pragma region Constructors:
@@ -37,9 +36,7 @@ public:
 	#pragma region Operations:
 		/// <summary>Evaluates the fitness of all members of the population using <paramref name="f"/>.</summary>
 		/// <param name="f">The function to determine the fitness of an individual.</param>
-		virtual void evaluateAll(const FitnessFunction& f);
-
-		void evaluate(const FitnessFunction& f, const std::size_t i);
+		inline virtual void evaluateAll(const FitnessFunction& f) { Population::evaluateAll(f); }
 
 		/// <summary>Updates the velocity of particle <paramref name="i"/>.</summary>
 		/// <param name="i">The particle's ID.</param>

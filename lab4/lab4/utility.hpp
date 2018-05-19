@@ -80,15 +80,15 @@ typedef std::chrono::high_resolution_clock				highRes_Clock;
 
 /// <summary>Gets a random number in the given range using a mersenne twister.</summary>
 /// <typeparam name="T">Some std::RealType.</typeparam>
-/// <param name="p_MIN">Pointer to the minimum value of the range.</param>
-/// <param name="p_MAX">Pointer to the maximum value of the range.</param>
-/// <returns>A random number between <paramref name="p_MIN"/> and <paramref name="p_MAX"/> (inclusive-exclusive).</returns>
+/// <param name="MIN">Pointer to the minimum value of the range.</param>
+/// <param name="MAX">Pointer to the maximum value of the range.</param>
+/// <returns>A random number between <paramref name="MIN"/> and <paramref name="MAX"/> (inclusive-exclusive).</returns>
 template <typename T>
-inline T getRandomRealInRange(const T p_MIN, const T p_MAX)
+inline T getRandomRealInRange(const T MIN, const T MAX)
 {
 	static std::random_device rd{};
 	static std::mt19937 engine{ rd() };
-	std::uniform_real_distribution<T> dist{ p_MIN, p_MAX };
+	std::uniform_real_distribution<T> dist{ MIN, MAX };
 
 	return dist(engine);
 } // end template getRandomRealInRange
@@ -96,9 +96,9 @@ inline T getRandomRealInRange(const T p_MIN, const T p_MAX)
 
 /// <summary>Gets a random number in the given range using a mersenne twister.</summary>
 /// <typeparam name="T">Some std::IntType or std::UIntType.</typeparam>
-/// <param name="p_MIN">Pointer to the minimum value of the range.</param>
-/// <param name="p_MAX">Pointer to the maximum value of the range.</param>
-/// <returns>A random number between <paramref name="p_MIN"/> and <paramref name="p_MAX"/> (both inclusive).</returns>
+/// <param name="MIN">Pointer to the minimum value of the range.</param>
+/// <param name="MAX">Pointer to the maximum value of the range.</param>
+/// <returns>A random number between <paramref name="MIN"/> and <paramref name="MAX"/> (both inclusive).</returns>
 template <typename T>
 inline T getRandomIntInRange(const T MIN, const T MAX)
 {
@@ -108,6 +108,30 @@ inline T getRandomIntInRange(const T MIN, const T MAX)
 
 	return dist(engine);
 } // end template getRandomIntInRange
+
+
+/// <summary>Gets a vector of specified size with a normal distribution of reals around <paramref name="MEAN"/> and with standard deviation <paramref name="STD"/>.</summary>
+/// <typeparam name="T">std::RealType.</typeparam>
+/// <param name="ui_SIZE">Size of the vector.</param>
+/// <param name="MEAN">Mean to generate the normal distribution around.</param>
+/// <param name="STD">Standard Deviation for the normal distribution.</param>
+/// <returns>A vector containing <paramref name="ui_SIZE"/> normally distributed numbers.</returns>
+template <typename T> 
+std::vector<T>* getNormalRealDistribution(const std::size_t ui_SIZE, const T MEAN, const T STD)
+{
+	static std::random_device rd{};
+	static std::mt19937 engine{ rd() };
+	std::normal_distribution<T> dist{ MEAN, STD };
+
+	std::vector<T>* distribution = new std::vector<T>(ui_SIZE);
+
+	for (std::size_t i = 0; i < ui_SIZE; i++)
+	{
+		(*distribution)[i] = dist(engine);
+	} // end foreach
+
+	return distribution;
+} // end template getNormalRealDistribution
 
 
 /// <summary>Generates a random permutation of <paramref name="numbers"/> of length <paramref name="M"/> and stores this in <paramref name="results"/>.</summary>
@@ -122,15 +146,15 @@ template <typename T>
 void genPermutation(T* numbers, std::size_t N, T* results, const std::size_t M, const T excluded)
 {
 	// randomly shuffle the array elements around
-	for (size_t i = 0; i < M+1; i++) 
+	for (std::size_t i = 0; i < M+1; i++)
 	{
-		size_t j = getRandomIntInRange<size_t>(i, N-1);
+		std::size_t j = getRandomIntInRange<std::size_t>(i, N-1);
 		auto temp = numbers[i]; 
 		numbers[i] = numbers[j];
 		numbers[j] = temp;
 	} // end for
 	// get the permutation from the first n indeces
-	for (size_t i = 0, j = 0; j < M; i++)
+	for (std::size_t i = 0, j = 0; j < M; i++)
 	{
 		if (numbers[i] != excluded)
 		{

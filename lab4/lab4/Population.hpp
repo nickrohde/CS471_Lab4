@@ -19,14 +19,14 @@ public:
 		/// <summary>Constructs a new population with <paramref name="ui_SIZE"/> members, each of size <paramref name="ui_DIM"/>.</summary>
 		/// <param name="ui_SIZE">The size of the population.</param>
 		/// <param name="ui_DIM">The size of each member of the population.</param>
-		/// <param name="bounds">The min/max value that may be stored in a gene.</param>
-		Population(const std::size_t ui_SIZE, const std::size_t ui_DIM, const Bounds& bounds);
+		/// <param name="BOUNDS">The min/max value that may be stored in a gene.</param>
+		Population(const std::size_t ui_SIZE, const std::size_t ui_DIM, const Bounds& BOUNDS);
 
-		/// <summary>Constructs a new population that is a copy of the population <paramref name="other"/>.</summary>
-		/// <param name="other">The population to copy.</param>
-		Population(const Population& other);
+		/// <summary>Constructs a new population that is a copy of the population <paramref name="OTHER"/>.</summary>
+		/// <param name="OTHER">The population to copy.</param>
+		Population(const Population& OTHER);
 
-		/// <summary>Constructs a new population that is a copy of the population <paramref name="other"/>.</summary>
+		/// <summary>Moves the population <paramref name="other"/> into a new population object.</summary>
 		/// <param name="other">The population to copy.</param>
 		Population(Population&& other) noexcept;
 
@@ -43,8 +43,12 @@ public:
 		void sort(void) noexcept;
 
 		/// <summary>Evaluates the fitness of all members of the population using <paramref name="f"/>.</summary>
-		/// <param name="f">The function to determine the fitness of an individual.</param>
-		virtual void evaluateAll(const FitnessFunction& f) = 0;
+		/// <param name="F">The function to determine the fitness of an individual.</param>
+		virtual void evaluateAll(const FitnessFunction& F);
+
+		/// <summary>Evaluates the fitness of the specified member of the population using <paramref name="f"/>.</summary>
+		/// <param name="F">The function to determine the fitness of the individual.</param>
+		void evaluate(const FitnessFunction& F, const std::size_t i);
 
 	#pragma endregion
 
@@ -77,10 +81,16 @@ public:
 		/// <summary>Accessor for the best values for individual <paramref name="j"/>.</summary>
 		/// <param name="j">Element to retrieve.</param>
 		/// <returns>The best fitness value ever found by the <paramref name="j"/>th individual.</returns>
+		/// <exception name="std::out_of_range">Thrown if <paramref name="i"/> is out of bounds.</exception>
 		/// <exception name="std::runtime_error">Thrown if the memory allocation of the population or fitnesses failed.</exception>
 		inline double best(const std::size_t j)
 		{
-			return best()[j];
+			if (j < ui_length)
+			{
+				return best()[j];
+			} // end if
+
+			throw std::out_of_range("Index was out of range!");
 		} // end method best
 
 		/// <summary>Accessor for the best member of the population.</summary>
@@ -102,6 +112,39 @@ public:
 		{
 			return dp_pop != nullptr && fitnesses != nullptr;
 		} // end method isValid
+
+		/// <summary>Accessor for the fitness of individual <paramref name="i"/>.</summary>
+		/// <param name="i">Element to retrieve.</param>
+		/// <returns>The fitness value of individual <paramref name="i"/>.</returns>
+		/// <exception name="std::out_of_range">Thrown if <paramref name="i"/> is out of bounds.</exception>
+		/// <exception name="std::runtime_error">Thrown if the memory allocation of the population or fitnesses failed.</exception>
+		inline double fitness(const std::size_t i) const 
+		{
+			if (isValid())
+			{
+				if (i < ui_size)
+				{
+					return fitnesses[i].d_currentfitness;
+				} // end if
+
+				throw std::out_of_range("Index was out of range!");
+			} // end if	
+
+			throw std::runtime_error("Memory allocation failed.");
+		} // end method fitness
+
+	#pragma endregion
+
+	#pragma region Operators:
+		/// <summary>Copies the population <paramref name="OTHER"/> into this population.</summary>
+		/// <param name="OTHER">Population to copy.</param>
+		/// <returns>This object.</returns>
+		Population& operator=(const Population& OTHER);
+
+		/// <summary>Moves the population <paramref name="OTHER"/> into this population.</summary>
+		/// <param name="OTHER">Population to move.</param>
+		/// <returns>This object.</returns>
+		Population& operator=(Population&& other) noexcept;
 
 		/// <summary>Accessor for the <paramref name="i"/>th member of the population.</summary>
 		/// <param name="i">Member to retrieve.</param>
