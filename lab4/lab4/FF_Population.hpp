@@ -60,10 +60,10 @@ public:
 		double distance(const std::size_t j, const std::size_t k);
 
 		/// <summary>Determines the light intensity of <paramref name="k"/> at the distance <paramref name="d_DIST"/>.</summary>
-		/// <param name="j">Firefly.</param>
+		/// <param name="j">The firefly.</param>
 		/// <param name="d_DIST">Distance to other firefly.</param>
 		/// <returns>The light intensity of firefly <paramref name="j"/> as experienced from distance <paramref name="d_DIST"/>.</returns>
-		inline double intensity(const std::size_t j, const double d_DIST) noexcept { return (d_intensity / exp(gamma() * pow(d_DIST, 2))); }
+		inline double intensity(const std::size_t j, const double d_DIST) noexcept { return (d_intensity / exp(gamma() * pow(d_DIST, 2))) * pow(fitness(j),-1.0); }
 
 	#pragma endregion
 

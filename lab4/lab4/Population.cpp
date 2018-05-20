@@ -24,6 +24,8 @@
 			// copy primitives
 			ui_size = other.ui_size;
 			ui_length = other.ui_length;
+			ui_bestIndex = other.ui_bestIndex;
+			ui_worstIndex = other.ui_worstIndex;
 			b_isSorted = other.b_isSorted;
 			bounds = other.bounds;
 
@@ -76,6 +78,8 @@
 			ui_size = OTHER.ui_size;
 			ui_length = OTHER.ui_length;
 			b_isSorted = OTHER.b_isSorted;
+			ui_bestIndex = OTHER.ui_bestIndex;
+			ui_worstIndex = OTHER.ui_worstIndex;
 			bounds = OTHER.bounds;
 
 			try
@@ -103,6 +107,8 @@
 			// copy primitives
 			ui_size = other.ui_size;
 			ui_length = other.ui_length;
+			ui_bestIndex = other.ui_bestIndex;
+			ui_worstIndex = other.ui_worstIndex;
 			b_isSorted = other.b_isSorted;
 			bounds = other.bounds;
 
@@ -134,13 +140,19 @@
 
 			if (d_fitness < fitnesses[j].d_bestFitness)
 			{
-				fitnesses[j].d_bestFitness = d_fitness; // update particle's best fitness
+				fitnesses[j].d_bestFitness = d_fitness; // update best fitness
 
 				if (d_fitness < bestFitness())
 				{
 					ui_bestIndex = j; // update global best
 				} // end if
 			} // end if
+			else if (d_fitness > worstFitness())
+			{
+				ui_worstIndex = j; // update global worst
+			} // end else
+
+			b_fitnessValid = true;
 			return;
 		} // end if
 
@@ -177,8 +189,10 @@
 #pragma region Private:
 	void Population::initializePopulation(const std::size_t ui_SIZE, const std::size_t ui_DIM)
 	{
-		ui_size = ui_SIZE;    // the length of all genes
-		ui_length = ui_DIM;  // index of the fitness value
+		ui_size = ui_SIZE;  
+		ui_length = ui_DIM;  
+		ui_worstIndex = ui_bestIndex = 0;
+		b_fitnessValid = false;
 
 		try
 		{

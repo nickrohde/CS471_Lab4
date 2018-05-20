@@ -94,17 +94,50 @@ public:
 		} // end method best
 
 		/// <summary>Accessor for the best member of the population.</summary>
-		/// <returns>Pointer to the start of the best member of the population.</returns>
+		/// <returns>Fitness of the fittest member of the population.</returns>
 		/// <exception name="std::runtime_error">Thrown if the memory allocation of the population or fitnesses failed.</exception>
 		inline double bestFitness(void)
 		{
 			if (isValid())
 			{
-				return fitnesses[ui_bestIndex].d_bestFitness;
+				if (b_fitnessValid)
+				{
+					return fitnesses[ui_bestIndex].d_bestFitness;
+				} // end if
+				else
+				{
+					return getDoubleMax();
+				} // end else
 			} // end if
 
 			throw std::runtime_error("Memory allocation failed.");
 		} // end method bestFitness
+
+		/// <summary>Accessor for the worst member of the population.</summary>
+		/// <returns>Fitness of the least fit member of the population.</returns>
+		/// <exception name="std::runtime_error">Thrown if the memory allocation of the population or fitnesses failed.</exception>
+		inline double worstFitness(void)
+		{
+			if (isValid())
+			{
+				if (b_fitnessValid)
+				{
+					return fitnesses[ui_worstIndex].d_bestFitness;
+				} // end if
+				else
+				{
+					#ifdef min // to make the line below work
+						#undef min 
+					#endif
+					return std::numeric_limits<double>::min();
+					#ifndef min // undo the undef
+						#define min(a,b) (a < b) ? (a) : (b)
+					#endif
+				} // end else
+			} // end if
+
+			throw std::runtime_error("Memory allocation failed.");
+		} // end method worstFitness
 
 		/// <summary>Determines whether or not the dynamic memory is valid.</summary>
 		/// <returns>True if all memory is properly instantiated, otherwise false.</returns>
@@ -172,7 +205,8 @@ public:
 protected:
 	#pragma region Data Members:
 		/// <summary>Stores whether or not the population is sorted.</summary>
-		bool b_isSorted;
+		bool b_isSorted,
+			 b_fitnessValid;
 
 		/// <summary>The gene pool of this population.</summary>
 		double** dp_pop;
@@ -187,7 +221,10 @@ protected:
 					ui_size,
 
 		/// <summary>Index of the fittests individual.</summary>
-					ui_bestIndex;
+					ui_bestIndex,
+
+		/// <summary>Index of the least fit individual.</summary>
+					ui_worstIndex;
 
 		/// <summary>Min/max value that a component of the gene can have.</summary>
 		Bounds bounds;
