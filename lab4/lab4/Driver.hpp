@@ -49,6 +49,8 @@ private:
 			b_stop;	
 	
 	Test_Info	test_info;
+	PSO_Info    pso_info;
+	FF_Info     ffa_info;
 
 	/// <summary>Timing of each run.</summary>
 	timePoint	compute_start,

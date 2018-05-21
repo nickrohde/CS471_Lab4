@@ -19,6 +19,7 @@
 #pragma region Typedefs:
 	typedef std::function<double(const double*, const std::size_t)> FitnessFunction;
 	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const PSO_Info&)> _PSO_;
+	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const FF_Info&)> _FFA_;
 
 #pragma endregion
 
@@ -40,15 +41,6 @@ struct Test_Info
 	std::size_t ui_generations,
 				ui_popSize;
 
-#pragma endregion
-
-#pragma region PSO Info:
-	double		d_PSO_c1,
-				d_PSO_c2,
-				d_PSO_k;
-#pragma endregion
-
-#pragma region FF Info:
 #pragma endregion
 
 }; // end Struct Test_Info
@@ -136,7 +128,7 @@ public:
 								} // end if
 							} // end for y
 						} // end for v
-						//std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
+						std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
 
 						deleteResults(res, test_info.ui_numThreads); // delete results from this test
 					} // end for j

@@ -9,9 +9,10 @@ Results* _FFA(const FitnessFunction& f, const Population_Info& POP_INFO, const B
 
 	FF_Population* current = new FF_Population(POP_INFO, BOUNDS, FF_INFO); // current population
 
-	double	d_beta_0 = 1.0,
-			d_beta = 0.0,
+	double	d_beta = 0.0,
 			d_dist = 0.0;
+
+	current->evaluateAll(f);
 
 	for (std::size_t i = 0; i < POP_INFO.ui_generations; i++)
 	{
@@ -19,19 +20,28 @@ Results* _FFA(const FitnessFunction& f, const Population_Info& POP_INFO, const B
 
 		for (std::size_t j = 0; j < POP_INFO.ui_size; j++)
 		{
-			for (std::size_t k = 0; k < POP_INFO.ui_size; k++)
+			for (std::size_t k = j+1; k < POP_INFO.ui_size; k++)
 			{
 				d_dist = current->distance(j, k);
 
-				if (current->intensity(j, d_dist) > current->intensity(k, d_dist))
+				if (current->intensity(j, d_dist) >= current->intensity(k, d_dist))
 				{
 					d_beta = current->beta(d_dist);
-
 					copy->shiftTowards(j, k, d_beta);
 				} // end if
 			} // end for k
+
+			copy->evaluateAll(f);
 		} // end for j
+
+		delete current;
+		current = copy;
+		copy = nullptr;
 	} // end for i
+
+	res->d_bestValue = current->bestFitness();
+
+	delete current;
 
 	return res;
 } // end method _FFA

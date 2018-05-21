@@ -27,6 +27,7 @@
 			ui_bestIndex = other.ui_bestIndex;
 			ui_worstIndex = other.ui_worstIndex;
 			b_isSorted = other.b_isSorted;
+			b_fitnessValid = other.b_fitnessValid;
 			bounds = other.bounds;
 
 			other.ui_size = 0;
@@ -67,7 +68,10 @@
 
 		inline void Population::evaluate(const FitnessFunction& F, const std::size_t i)
 		{
-			setFitness(i, F(dp_pop[i], ui_length));
+			double* temp = new double[ui_length];
+			memcpy(temp, dp_pop[i], ui_length * sizeof(double));
+			setFitness(i, F(temp, ui_length));
+			delete temp;
 		} // end method evaluate
 
 	#pragma endregion
@@ -78,6 +82,7 @@
 			ui_size = OTHER.ui_size;
 			ui_length = OTHER.ui_length;
 			b_isSorted = OTHER.b_isSorted;
+			b_fitnessValid = OTHER.b_fitnessValid;
 			ui_bestIndex = OTHER.ui_bestIndex;
 			ui_worstIndex = OTHER.ui_worstIndex;
 			bounds = OTHER.bounds;
@@ -90,15 +95,17 @@
 			catch (std::runtime_error e)
 			{
 				deleteContents();
-				return;
+				throw e;
 			} // end catch	
 
 			memcpy(fitnesses, OTHER.fitnesses, sizeof(Fitness)*ui_length);
-
+			
 			for (std::size_t i = 0; i < ui_size; i++)
 			{
 				memcpy(dp_pop[i], OTHER.dp_pop[i], sizeof(double)*ui_length);
 			} // end for
+
+			return (*this);
 		} // end Copy Assignement
 
 
@@ -110,6 +117,7 @@
 			ui_bestIndex = other.ui_bestIndex;
 			ui_worstIndex = other.ui_worstIndex;
 			b_isSorted = other.b_isSorted;
+			b_fitnessValid = other.b_fitnessValid;
 			bounds = other.bounds;
 
 			other.ui_size = 0;
@@ -125,6 +133,8 @@
 			// set other object's pointers to null
 			other.dp_pop = nullptr;
 			other.fitnesses = nullptr;
+
+			return (*this);
 		} // end Move Assignment
 
 	#pragma endregion

@@ -37,7 +37,16 @@
 
 				for (std::size_t i = 0; i < ui_length; i++)
 				{
-					(*this)[k][i] = (*this)[k][i] + (d_BETA * ((*this)[j][i] - (*this)[k][i])) + (getRandomRealInRange(0, 1) * (*normalDistribution)[i]);
+					dp_pop[k][i] = dp_pop[k][i] + (d_BETA * (dp_pop[j][i] - dp_pop[k][i])) + (getRandomRealInRange<double>(0.0, 1.0) * (*normalDistribution)[i]);
+
+					while (dp_pop[k][i] < bounds.d_min)
+					{
+						dp_pop[k][i] = bounds.d_min + getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
+					} // end while
+					while (dp_pop[k][i] > bounds.d_max)
+					{
+						dp_pop[k][i] = bounds.d_max - getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
+					} // end while
 				} // end for
 
 				delete normalDistribution;
@@ -94,6 +103,8 @@
 			d_beta = other.d_beta;
 			d_gamma = other.d_gamma;
 			d_intensity = other.d_intensity;
+
+			return (*this);
 		} // end Move Assignment
 
 	#pragma endregion

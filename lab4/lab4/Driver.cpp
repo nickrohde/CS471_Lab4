@@ -1,6 +1,7 @@
 #include "Driver.hpp"				// class header
 #include "IniParser/IniParser.hpp"	// IniParser class
 #include "PSO.hpp"
+#include "FFA.hpp"
 
 #pragma message("DRIVER")
 
@@ -99,10 +100,14 @@ void Driver::initialize(const std::string  s_fileName)
 		test_info.ui_generations = parser->getKeyAs<size_t>("POP", "generations");
 		test_info.ui_popSize = parser->getKeyAs<size_t>("POP", "size");
 
-		test_info.d_PSO_c1 = parser->getKeyAs<double>("PSO", "c1");
-		test_info.d_PSO_c2 = parser->getKeyAs<double>("PSO", "c2");
-		test_info.d_PSO_k = parser->getKeyAs<double>("PSO", "c3");
-		
+		pso_info.C1 = parser->getKeyAs<double>("PSO", "c1");
+		pso_info.C2 = parser->getKeyAs<double>("PSO", "c2");
+		pso_info.K = parser->getKeyAs<double>("PSO", "c3");
+
+		ffa_info.alpha = parser->getKeyAs<double>("FFA", "alpha");
+		ffa_info.beta = parser->getKeyAs<double>("FFA", "beta");
+		ffa_info.gamma = parser->getKeyAs<double>("FFA", "gamma");
+		ffa_info.intensity = parser->getKeyAs<double>("FFA", "intensity");
 	} // end try
 	catch (invalid_argument e)
 	{
@@ -251,7 +256,7 @@ int Driver::run(void)
 
 			if (test != nullptr)
 			{
-				test->runTest<_PSO_>(PSO, PSO_Info(0.8, 1.2, 0.9));
+				test->runTest<_PSO_>(PSO, pso_info);
 			} // end if
 			else
 			{
@@ -274,7 +279,15 @@ int Driver::run(void)
 
 			compute_start = highRes_Clock::now(); // start timer for whole run
 
-			assert(TODO);
+			if (test != nullptr)
+			{
+				test->runTest<_FFA_>(FFA, ffa_info);
+			} // end if
+			else
+			{
+				cout << "No test settings available!" << endl;
+				break;
+			} // end else
 
 			compute_end = highRes_Clock::now();
 			time_to_compute = std::chrono::duration_cast<duration>(compute_end - compute_start);

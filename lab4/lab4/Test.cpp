@@ -145,7 +145,7 @@ string Test::makeFileName(size_t ui_dim, int i_functionNumber)
 {
 	stringstream name;
 
-	name << "PSO_" << ui_dim << "_f" << (i_functionNumber + 1) << ".csv" ;
+	name << "FFA_" << ui_dim << "_f" << (i_functionNumber + 1) << ".csv" ;
 
 	return name.str();
 } // end method makeFileName
