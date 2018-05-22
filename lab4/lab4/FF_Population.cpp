@@ -31,29 +31,19 @@
 	#pragma region Operations:
 		void FF_Population::shiftTowards(const std::size_t j, const std::size_t k, const double d_BETA)
 		{
-			if (isValid())
+			for (std::size_t i = 0; i < ui_length; i++)
 			{
-				std::vector<double>* normalDistribution = getNormalRealDistribution<double>(ui_length, NORMAL_MEAN, NORMAL_STD);
+				dp_pop[k][i] = dp_pop[k][i] + (d_BETA * (dp_pop[j][i] - dp_pop[k][i])) + (getRandomRealInRange<double>(0.0, 1.0) * getRandomRealInRange<double>(0.0,1.0));
 
-				for (std::size_t i = 0; i < ui_length; i++)
+				while (dp_pop[k][i] < bounds.d_min)
 				{
-					dp_pop[k][i] = dp_pop[k][i] + (d_BETA * (dp_pop[j][i] - dp_pop[k][i])) + (getRandomRealInRange<double>(0.0, 1.0) * (*normalDistribution)[i]);
-
-					while (dp_pop[k][i] < bounds.d_min)
-					{
-						dp_pop[k][i] = bounds.d_min + getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
-					} // end while
-					while (dp_pop[k][i] > bounds.d_max)
-					{
-						dp_pop[k][i] = bounds.d_max - getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
-					} // end while
-				} // end for
-
-				delete normalDistribution;
-				return;
-			} // end if
-
-			throw std::runtime_error("Memory allocation failed.");
+					dp_pop[k][i] = bounds.d_min + getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
+				} // end while
+				while (dp_pop[k][i] > bounds.d_max)
+				{
+					dp_pop[k][i] = bounds.d_max - getRandomRealInRange<double>(0.0, 1.0)*(bounds.d_max - bounds.d_min);
+				} // end while
+			} // end for
 		} // end method shiftTowards
 
 
@@ -61,19 +51,14 @@
 		{
 			if (j < ui_size && k < ui_size)
 			{
-				if (isValid())
+				double r = 0.0;
+
+				for (std::size_t i = 0; i < ui_length; i++)
 				{
-					double r = 0.0;
+					r = r + pow((*this)[j][i] - (*this)[k][i],2);
+				} // end for
 
-					for (std::size_t i = 0; i < ui_length; i++)
-					{
-						r = r + pow((*this)[j][i] - (*this)[k][i],2);
-					} // end for
-
-					return sqrt(r);
-				} // end if
-
-				throw std::runtime_error("Memory allocation failed.");
+				return sqrt(r);
 			} // end if
 
 			throw std::out_of_range("Indices received out of bounds!");

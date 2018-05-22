@@ -17,7 +17,7 @@
 #pragma endregion
 
 #pragma region Typedefs:
-	typedef std::function<double(const double*, const std::size_t)> FitnessFunction;
+	typedef std::function<double(const std::vector<double>*)> FitnessFunction;
 	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const PSO_Info&)> _PSO_;
 	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const FF_Info&)> _FFA_;
 
@@ -34,6 +34,8 @@ struct Test_Info
 				ui_numThreads;
 
 	bool		b_storeData;
+
+	std::string s_filePreFix;
 
 #pragma endregion
 
@@ -55,12 +57,8 @@ public:
 		/// <summary>Default constructor, sets all variables to a default.</summary>
 		Test(void);
 
-		/// <summary>Constructor taking 4 arguements.</summary>
-		/// <param name="ui_dimMin">Starting dimension for tests (inclusive; must be positive integer and strictly smaller than <paramref name="ui_dimMax"/>).</param>
-		/// <param name="ui_dimMax">Ending dimension for tests (inclusive; must be positive integer and strictly greater than <paramref name="ui_dimMin"/>).</param>
-		/// <param name="ui_dimDelta">Dimension increase step size (must be positive integer).</param>
-		/// <param name="b_storeData">Whether or not to generate data files.</param>
-		/// <param name="ui_generations">Number of generations to run DE/GA.</param>
+		/// <summary>Constructor taking a <see cref="Test_Info"/> object containing test settings.</summary>
+		/// <param name="TEST_INFO">Structure containing all test settings.</param>
 		Test(const Test_Info& TEST_INFO);
 	#pragma endregion
 
@@ -128,7 +126,17 @@ public:
 								} // end if
 							} // end for y
 						} // end for v
-						std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
+						std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution;
+
+						// for analysis, print how far it's away from global best
+						if (optimalSolutions[i][(j / test_info.ui_deltaDim) - 1] != -1.0)
+						{
+							std::cout << "  --  " << ((d_solution / optimalSolutions[i][(j / test_info.ui_deltaDim) - 1]) * 100) << "%"<< std::endl;
+						} // end if
+						else
+						{
+							std::cout << "  --  no data" << std::endl;
+						} // end else
 
 						deleteResults(res, test_info.ui_numThreads); // delete results from this test
 					} // end for j
@@ -155,11 +163,16 @@ private:
 		/// <summary>Array containing the bounds of all 15 cost functions.</summary>
 		Bounds * da_ranges;
 
+		std::vector<std::vector<double>> optimalSolutions;
+
+		/// <summary>Stores test parameters.</summary>
 		Test_Info test_info;
 
 		/// <summary>Used for timing tests.</summary>
 		timePoint	compute_start,
+		/// <summary>Used for timing tests.</summary>
 					compute_end;
+		/// <summary>Used for timing tests.</summary>
 		duration	time_to_compute;
 
 		/// <summary>Vector containing pointers to the cost functions.</summary>
@@ -173,20 +186,29 @@ private:
 		/// <remarks>This function is only there to remove some code from the constructor, it is inline and will simply be placed in the constructor by the compiler.</remarks>
 		void makeRanges(Bounds*& da_ranges);
 
-
+		/// <summary>Writes the test data in the <paramref name="res"/> matrix into a file named <paramref name="s_NAME"/>.</summary>
+		/// <param name="res">Results matrix.</param>
+		/// <param name="ui_SIZE_OUTER">Size of outer array of <paramref name="res"/>.</param>
+		/// <param name="ui_SIZE_INNNER">Size of inner array of <paramref name="res"/>.</param>
+		/// <param name="s_NAME">Filename for results.</param>
 		void dumpData(const Results** res, const std::size_t ui_SIZE_OUTER, std::size_t ui_SIZE_INNNER, const std::string s_NAME);
 
-
+		/// <summary>Writes the executions times stored in the <paramref name="d_TIMES"/> vector into a file named "times.txt".</summary>
+		/// <param name="d_TIMES">Vector with execution times.</param>
+		/// <param name="ui_SIZE">Number of elements in <paramref name="d_TIMES"/>.</param>
 		void writeTimes(const double* d_TIMES, const size_t ui_SIZE);
 
-
+		/// <summary>Deletes the <paramref name="res"/> matrix.</summary>
+		/// <param name="res">Matrix to delete.</param>
+		/// <param name="ui_SIZE">Number of inner arrays in the <paramref name="res"/> matrix.</param>
 		void deleteResults(Results** res, const std::size_t ui_SIZE);
 
+		void setOptimalPoints();
 
-		/// <summary>Generates a file name. Name will be generated as "data_[<paramref name="ui_dim"/>]_f[<paramref name="i_functionNumber"/>]".</summary>
+		/// <summary>Generates a file name. Name will be generated as "[Strategy Name]_[<paramref name="ui_dim"/>]_f[<paramref name="i_functionNumber"/>]".</summary>
 		/// <param name="ui_dim">Dimension to insert into the name.</param>
-		/// <param name="i_functionNumber">Function number to insert into the name.</param>
-		std::string makeFileName(std::size_t ui_dim, int i_functionNumber);
+		/// <param name="ui_functionNumber">Function number to insert into the name.</param>
+		std::string makeFileName(std::size_t ui_dim, std::size_t ui_functionNumber);
 
 	#pragma endregion
 

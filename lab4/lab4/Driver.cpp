@@ -99,6 +99,7 @@ void Driver::initialize(const std::string  s_fileName)
 
 		test_info.ui_generations = parser->getKeyAs<size_t>("POP", "generations");
 		test_info.ui_popSize = parser->getKeyAs<size_t>("POP", "size");
+		test_info.s_filePreFix = parser->getKeyAs<string>("TEST", "file_prefix");
 
 		pso_info.C1 = parser->getKeyAs<double>("PSO", "c1");
 		pso_info.C2 = parser->getKeyAs<double>("PSO", "c2");

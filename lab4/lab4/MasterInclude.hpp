@@ -27,3 +27,4 @@
 #include <cassert>
 #include <cmath>
 #include <cstdarg>
+#include <memory>

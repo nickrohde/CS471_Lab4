@@ -40,10 +40,6 @@ public:
 	#pragma endregion
 
 	#pragma region Operations:
-		/// <summary>Evaluates the fitness of all members of the population using <paramref name="f"/>.</summary>
-		/// <param name="f">The function to determine the fitness of an individual.</param>
-		inline virtual void evaluateAll(const FitnessFunction& F) { Population::evaluateAll(F); }
-
 		/// <summary>Moves firefly <paramref name="k"/> towards firefly <paramref name="j"/>.</summary>
 		/// <param name="j">Target firefly.</param>
 		/// <param name="k">Firefly moving towards <paramref name="j"/>.</param>
@@ -63,10 +59,7 @@ public:
 		/// <param name="j">The firefly.</param>
 		/// <param name="d_DIST">Distance to other firefly.</param>
 		/// <returns>The light intensity of firefly <paramref name="j"/> as experienced from distance <paramref name="d_DIST"/>.</returns>
-		inline double intensity(const std::size_t j, const double d_DIST) noexcept 
-		{ 
-			return (((worstFitness() - fitness(j)) * d_intensity) / exp(gamma() * pow(d_DIST, 2))); 
-		}
+		inline double intensity(const std::size_t j, const double d_DIST) noexcept { return (((worstFitness() - fitness(j)) * d_intensity) / exp(gamma() * pow(d_DIST, 2))); }
 
 	#pragma endregion
 

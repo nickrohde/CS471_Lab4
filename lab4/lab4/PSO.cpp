@@ -3,7 +3,7 @@
 #pragma message("PSO")
 
 
-Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO)
+Results* _PSO(const FitnessFunction& F, const Population_Info& POP_INFO, const Bounds& BOUNDS, const PSO_Info& PSO_INFO)
 {
 	timePoint compute_end = highRes_Clock::now();
 	timePoint compute_start = highRes_Clock::now();
@@ -12,14 +12,14 @@ Results* _PSO(const FitnessFunction& f, const Population_Info& POP_INFO, const B
 
 	compute_start = highRes_Clock::now();
 
-	population->evaluateAll(f);
+	population->evaluateAll(F);
 
 	for (size_t i = 0; i < POP_INFO.ui_generations; i++)
 	{
 		for (size_t j = 0; j < population->size(); j++)
 		{
 			population->update(j);
-			population->evaluate(f, j);
+			population->evaluate(F, j);
 		} // end for j
 	} // end for i
 

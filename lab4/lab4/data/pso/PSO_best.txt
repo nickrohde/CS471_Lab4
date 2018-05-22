@@ -1,0 +1,67 @@
+Settings:
+[DIM]
+min=10
+max=30
+delta=10
+
+[TEST]
+num_test_itrs=6
+store_data=1
+num_threads=16
+file_prefix=PSO
+
+[POP]
+generations=500
+size=200
+
+[PSO]
+c1 = 0.8
+c2 = 1.2
+c3 = 0.6
+
+Results:
+Best solution found for f1 in 10 dimensions: -3112.12
+Best solution found for f1 in 20 dimensions: -4644.2
+Best solution found for f1 in 30 dimensions: -6572.92
+Best solution found for f2 in 10 dimensions: 634.078
+Best solution found for f2 in 20 dimensions: 11656.7
+Best solution found for f2 in 30 dimensions: 24864.7
+Best solution found for f3 in 10 dimensions: 1.09191e+07
+Best solution found for f3 in 20 dimensions: 6.54575e+08
+Best solution found for f3 in 30 dimensions: 4.85608e+09
+Best solution found for f4 in 10 dimensions: -1887.37
+Best solution found for f4 in 20 dimensions: -2826.35
+Best solution found for f4 in 30 dimensions: -3431.3
+Best solution found for f5 in 10 dimensions: 0
+Best solution found for f5 in 20 dimensions: 0
+Best solution found for f5 in 30 dimensions: 225.358
+Best solution found for f6 in 10 dimensions: -11.2936
+Best solution found for f6 in 20 dimensions: -21.7463
+Best solution found for f6 in 30 dimensions: -30.6027
+Best solution found for f7 in 10 dimensions: 22.4593
+Best solution found for f7 in 20 dimensions: 74.6108
+Best solution found for f7 in 30 dimensions: 126.686
+Best solution found for f8 in 10 dimensions: 22.2177
+Best solution found for f8 in 20 dimensions: 128.682
+Best solution found for f8 in 30 dimensions: 239.69
+Best solution found for f9 in 10 dimensions: 90.4306
+Best solution found for f9 in 20 dimensions: 257.348
+Best solution found for f9 in 30 dimensions: 417.703
+Best solution found for f10 in 10 dimensions: -4971.69
+Best solution found for f10 in 20 dimensions: -7158.39
+Best solution found for f10 in 30 dimensions: -8580.08
+Best solution found for f11 in 10 dimensions: -2878.18
+Best solution found for f11 in 20 dimensions: -4230.41
+Best solution found for f11 in 30 dimensions: -5036.05
+Best solution found for f12 in 10 dimensions: 0.0394411
+Best solution found for f12 in 20 dimensions: 0.176216
+Best solution found for f12 in 30 dimensions: 1.36176
+Best solution found for f13 in 10 dimensions: -6.4844
+Best solution found for f13 in 20 dimensions: -9.48405
+Best solution found for f13 in 30 dimensions: -11.3567
+Best solution found for f14 in 10 dimensions: -5.91884
+Best solution found for f14 in 20 dimensions: -7.72016
+Best solution found for f14 in 30 dimensions: -8.04027
+Best solution found for f15 in 10 dimensions: -0.340069
+Finished running tests for Particle Swarms.
+Time elapsed: 635.072 seconds.

@@ -27,20 +27,16 @@ public:
 	
 	#pragma endregion
 
-	#pragma region Destructor:
-		/// <summary>Releases all dynamic memory owned by this object.</summary>
-		~PS_Population(void) noexcept { deleteContents(); }
-
 	#pragma endregion
 
 	#pragma region Operations:
-		/// <summary>Evaluates the fitness of all members of the population using <paramref name="f"/>.</summary>
-		/// <param name="f">The function to determine the fitness of an individual.</param>
-		inline virtual void evaluateAll(const FitnessFunction& f) { Population::evaluateAll(f); }
-
 		/// <summary>Updates the velocity of particle <paramref name="i"/>.</summary>
 		/// <param name="i">The particle's ID.</param>
 		void update(const std::size_t i);
+
+		/// <summary>Updates the fitness of particle <paramref name="i"/>.</summary>
+		/// <param name="i">The particle's ID.</param>
+		void evaluate(const FitnessFunction& f, const std::size_t i);
 
 	#pragma endregion
 
@@ -50,9 +46,10 @@ public:
 private:
 	#pragma region Private Data Members:
 	/// <summary>Velocity matrix.</summary>
-	double** dp_velocity,
+	std::vector<std::vector<double>> dp_velocity;
+
 	/// <summary>Constant 1.</summary>
-			 d_C1,
+	double		 d_C1,
 	/// <summary>Constant 2.</summary>
 			 d_C2,
 	/// <summary>Velocity matrix.</summary>
@@ -66,10 +63,6 @@ private:
 	#pragma region Private methods:
 		///<summary>initializes the velocities of all particles to random values.</summary>
 		void initializeVelocities(void);
-
-		///<summary>Deallocates this population's dynamic memory.</summary>
-		///<remarks>Overload of the private function Population::deleteContents.</remarks>
-		void deleteContents(void) noexcept; 
 
 	#pragma endregion
 

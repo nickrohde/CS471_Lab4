@@ -17,6 +17,8 @@ using namespace std;
 			fitnessFunctions = getAllCostFunctions(ui_SHEKEL_M); // vector containing the cost functions
 
 			compute_start = compute_end = highRes_Clock::now();
+			optimalSolutions = std::vector<std::vector<double>>(NUMBER_FUNCTIONS);
+			setOptimalPoints();
 		} // end Default Constructor
 
 
@@ -32,6 +34,9 @@ using namespace std;
 			makeRanges(da_ranges); // make matrix with ranges for functions
 
 			fitnessFunctions = getAllCostFunctions(ui_SHEKEL_M); // vector containing the cost functions
+
+			optimalSolutions = std::vector<std::vector<double>>(NUMBER_FUNCTIONS);
+			setOptimalPoints();
 		} // end Constructor 4
 
 	#pragma endregion
@@ -105,7 +110,13 @@ void Test::writeTimes(const double * d_TIMES, const size_t ui_SIZE)
 {
 	if (d_TIMES != nullptr)
 	{
-		ofstream file("times.txt", ios::out | ios::app);
+		stringstream name;
+
+		name << test_info.s_filePreFix << "_times.txt";
+
+		string s_filename = name.str();
+
+		ofstream file(s_filename.c_str(), ios::out | ios::app);
 
 		if (file.is_open() && !file.bad())
 		{
@@ -140,12 +151,31 @@ void Test::deleteResults(Results** res, const std::size_t ui_SIZE)
 	} // end if
 } // end method deleteResults
 
+void Test::setOptimalPoints()
+{
+	optimalSolutions[0] = std::vector<double>{ -4189.829,-8379.658,-12569.487 };
+	optimalSolutions[1] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[2] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[3] = std::vector<double>{ -2000,-4000,-6000 };
+	optimalSolutions[4] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[5] = std::vector<double>{ -13.4235,-28.3385,-43.2535 };
+	optimalSolutions[6] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[7] = std::vector<double>{ -27.97345,-57.16015,-86.34685 };
+	optimalSolutions[8] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[9] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[10] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[11] = std::vector<double>{ -1,-1,-1 };
+	optimalSolutions[12] = std::vector<double>{ -9.66,-19.32,-28.98 };
+	optimalSolutions[13] = std::vector<double>{ -9,-19,-29 };
+	optimalSolutions[14] = std::vector<double>{ -1,-1,-1 };
+}
 
-string Test::makeFileName(size_t ui_dim, int i_functionNumber)
+
+string Test::makeFileName(size_t ui_dim, size_t ui_functionNumber)
 {
 	stringstream name;
 
-	name << "FFA_" << ui_dim << "_f" << (i_functionNumber + 1) << ".csv" ;
+	name << test_info.s_filePreFix << "_" << ui_dim << "_f" << (ui_functionNumber + 1) << ".csv";
 
 	return name.str();
 } // end method makeFileName
