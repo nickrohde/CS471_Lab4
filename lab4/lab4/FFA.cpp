@@ -5,15 +5,17 @@
 
 Results* _FFA(const FitnessFunction& f, const Population_Info& POP_INFO, const Bounds& BOUNDS, const FF_Info& FF_INFO)
 {
-	Results* res = new Results();
-
-	FF_Population* current = new FF_Population(POP_INFO, BOUNDS, FF_INFO); // current population
-
 	double	d_beta = 0.0,
 			d_dist = 0.0;
 
-	current->evaluateAll(f);
-	
+	timePoint compute_end = highRes_Clock::now();
+	timePoint compute_start = highRes_Clock::now();
+
+	FF_Population* current = new FF_Population(POP_INFO, BOUNDS, FF_INFO); // current population
+
+	compute_start = highRes_Clock::now();
+
+	current->evaluateAll(f);	
 
 	for (std::size_t i = 0; i < POP_INFO.ui_generations; i++)
 	{
@@ -39,7 +41,9 @@ Results* _FFA(const FitnessFunction& f, const Population_Info& POP_INFO, const B
 		current = copy;
 	} // end for i
 
-	res->d_bestValue = current->bestFitness();
+	compute_end = highRes_Clock::now();
+
+	Results* res = new Results(current->bestFitness(), std::chrono::duration_cast<duration>(compute_end - compute_start).count());
 
 	delete current;
 
