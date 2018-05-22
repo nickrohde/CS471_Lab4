@@ -10,8 +10,6 @@
 			d_C1 = PSO_INFO.C1;
 			d_C2 = PSO_INFO.C2;
 			d_K  = PSO_INFO.K;
-			updateCounter = 0;
-			updateFrequency = 5;
 
 			instantiate(dp_velocity, POP_INFO.ui_size, POP_INFO.ui_dim);
 			initializeVelocities();
@@ -23,8 +21,6 @@
 			d_C1 = OTHER.d_C1;
 			d_C2 = OTHER.d_C2;
 			d_K = OTHER.d_K;
-			updateCounter = OTHER.updateCounter;
-			updateFrequency = OTHER.updateFrequency;
 
 			instantiate(dp_velocity, OTHER.ui_size, OTHER.ui_length);
 
@@ -40,8 +36,6 @@
 			d_C1 = other.d_C1;
 			d_C2 = other.d_C2;
 			d_K = other.d_K;
-			updateCounter = other.updateCounter;
-			updateFrequency = other.updateFrequency;
 
 			dp_velocity = other.dp_velocity;
 			other.dp_velocity.clear();

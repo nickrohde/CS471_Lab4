@@ -6,8 +6,11 @@
 #include "MasterInclude.hpp" // 
 #include "Test.hpp"			 // Test, Test_Info
 
+/// <summary>For convenience and to make type easier to read.</summary>
 typedef std::chrono::high_resolution_clock::time_point timePoint;
+/// <summary>For convenience and to make type easier to read.</summary>
 typedef std::chrono::duration<double> duration;
+/// <summary>For convenience and to make type easier to read.</summary>
 typedef std::chrono::high_resolution_clock highRes_Clock;
 
 
@@ -15,7 +18,6 @@ typedef std::chrono::high_resolution_clock highRes_Clock;
 class Driver
 {
 public:
-
 	/// <summary>Default constructor.</summary>
 	Driver(void);
 

@@ -73,7 +73,7 @@ public:
 		/// <returns>The attractiveness at distance <paramref name="d_DIST"/>.</returns>
 		inline double beta(const double d_DIST) noexcept 
 		{ 
-			return (d_beta / exp(gamma() * pow(d_DIST,2))) + 0.2; 
+			return (d_beta / exp(gamma() * pow(d_DIST,2))) + 0.2; // 0.2 is beta_min
 		}
 
 		/// <summary>Getter for the gamma value.</summary>
@@ -100,9 +100,13 @@ public:
 #pragma region Private:
 private:
 	#pragma region Private Data Members:
+	/// <summary>Alpha constant for FFA.</summary>
 	double	d_alpha,
+	/// <summary>Beta_0 constant for FFA.</summary>
 			d_beta,
+	/// <summary>Gamma constant for FFA.</summary>
 			d_gamma,
+	/// <summary>I_0 constant for FFA.</summary>
 			d_intensity;
 	#pragma endregion
 

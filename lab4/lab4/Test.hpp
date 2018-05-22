@@ -17,8 +17,11 @@
 #pragma endregion
 
 #pragma region Typedefs:
+	///<summary>Fitness function passed to optimization strategies.</summary>
 	typedef std::function<double(const std::vector<double>*)> FitnessFunction;
+	///<summary>Particle Swarm Optimization strategy.</summary>
 	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const PSO_Info&)> _PSO_;
+	///<summary>Firefly Algorithm strategy.</summary>
 	typedef std::function<void(const std::size_t, const FitnessFunction&, const Population_Info&, const Bounds&, Results*, const FF_Info&)> _FFA_;
 
 #pragma endregion
@@ -68,15 +71,22 @@ public:
 	#pragma endregion
 
 	#pragma region Test:
+
+			/// <summary>Test Function for optimization strategies.</summary>
+			/// <typeparam name="F">Either <see cref="_PSO_"/> or <see cref="_FFA_"/>.</typeparam>
+			/// <typeparam name="Args">Arguement list for <see cref="_PSO_"/> or <see cref="_FFA_"/>.</typeparam>
+			/// <param name="f">Optimization strategy to use.</param>
+			/// <param name="args">Argument list.</param>
 			template <typename F, typename ...Args>
 			void runTest(F f, Args ...args)
 			{
 				double* dp_times = new double[((test_info.ui_maxDim - test_info.ui_minDim) / test_info.ui_deltaDim) + 1]; // stores times per iteration for each dimension
 
-				Results** res = new Results*[test_info.ui_numThreads];
+				Results** res = new Results*[test_info.ui_numThreads]; // matrix for test results
 
-				auto threads = std::vector<std::thread>(test_info.ui_numThreads);
+				auto threads = std::vector<std::thread>(test_info.ui_numThreads); // thread descriptors
 
+				// iterate over functions
 				for (std::size_t i = 0; i < fitnessFunctions.size(); i++)
 				{
 					// reset times for new function
@@ -88,9 +98,9 @@ public:
 					// run tests for all dimensions
 					for (std::size_t j = test_info.ui_minDim; j <= test_info.ui_maxDim; j += test_info.ui_deltaDim)
 					{
-						if (i == 14 && j > 10) continue;
+						if (i == 14 && j > 10) continue; // foxholes is only run for 10D
 
-						Population_Info pop_info(test_info.ui_popSize, j, test_info.ui_generations);
+						Population_Info pop_info(test_info.ui_popSize, j, test_info.ui_generations); // new population descriptor for new dimensions
 
 						double d_solution = getDoubleMax();
 
@@ -113,6 +123,7 @@ public:
 							dumpData(const_cast<const Results**>(res), test_info.ui_numThreads, test_info.ui_iterations, makeFileName(j, i));
 						} // end if
 
+						// store results
 						for (std::size_t v = 0; v < test_info.ui_numThreads; v++)
 						{
 							for (std::size_t y = 0; y < test_info.ui_iterations; y++)
@@ -126,22 +137,14 @@ public:
 								} // end if
 							} // end for y
 						} // end for v
-						std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution;
 
-						// for analysis, print how far it's away from global best
-						if (optimalSolutions[i][(j / test_info.ui_deltaDim) - 1] != -1.0)
-						{
-							std::cout << "  --  " << ((d_solution / optimalSolutions[i][(j / test_info.ui_deltaDim) - 1]) * 100) << "%"<< std::endl;
-						} // end if
-						else
-						{
-							std::cout << "  --  no data" << std::endl;
-						} // end else
+						// print best solution to console
+						std::cout << "Best solution found for f" << (i + 1) << " in " << j << " dimensions: " << d_solution << std::endl;
 
-						deleteResults(res, test_info.ui_numThreads); // delete results from this test
+						deleteResults(res, test_info.ui_numThreads); // delete results 
 					} // end for j
 
-					writeTimes(dp_times, ((test_info.ui_maxDim - test_info.ui_minDim) / test_info.ui_deltaDim) + 1);
+					writeTimes(dp_times, ((test_info.ui_maxDim - test_info.ui_minDim) / test_info.ui_deltaDim) + 1); // store times for this function
 				} // end for i
 
 				delete[] dp_times;
@@ -163,6 +166,7 @@ private:
 		/// <summary>Array containing the bounds of all 15 cost functions.</summary>
 		Bounds * da_ranges;
 
+		/// <summary>Vector storing optimal solutions for analysis.</summary>
 		std::vector<std::vector<double>> optimalSolutions;
 
 		/// <summary>Stores test parameters.</summary>
@@ -203,6 +207,8 @@ private:
 		/// <param name="ui_SIZE">Number of inner arrays in the <paramref name="res"/> matrix.</param>
 		void deleteResults(Results** res, const std::size_t ui_SIZE);
 
+		/// <summary>Initialises optimalSolutions vector.</summary>
+		/// <remarks>This only exists to remove some code from the constructor.</remarks>
 		void setOptimalPoints();
 
 		/// <summary>Generates a file name. Name will be generated as "[Strategy Name]_[<paramref name="ui_dim"/>]_f[<paramref name="i_functionNumber"/>]".</summary>

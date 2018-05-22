@@ -55,9 +55,6 @@ private:
 	/// <summary>Velocity matrix.</summary>
 			 d_K;
 
-	std::size_t updateCounter,
-				updateFrequency;
-
 	#pragma endregion
 
 	#pragma region Private methods:

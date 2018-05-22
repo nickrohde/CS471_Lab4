@@ -101,6 +101,7 @@ struct PSO_Info
 }; // end Struct PSO_Info
 
 
+/// <summary>Stores FFA constants.</summary>
 struct FF_Info
 {
 	FF_Info(void) {}
