@@ -144,6 +144,7 @@ public:
 	} // end method contains
 
 private:
+	/// <summary>Easier-to-use version of <see cref="std::pair"/>.</summary>
 	struct KeyPair
 	{
 		KeyPair(void) { key = value = ""; }
